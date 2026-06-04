@@ -57,7 +57,7 @@ export default function BuildScreen({
         {SR.build.heading.l1} <span className="offset">{SR.build.heading.l2}</span>
       </h1>
 
-      <div className="stagger" style={{ overflowY: 'auto', margin: '0 -22px', padding: '8px 22px 0' }}>
+      <div className="stagger" style={{ flex: 1, minHeight: 0, overflowY: 'auto', margin: '0 -22px', padding: '8px 22px 0' }}>
         <div>
           <label className="label">{SR.build.fields.name}</label>
           <input type="text" value={draft.to} placeholder="Mila" onChange={(e) => onChange({ to: e.target.value })} />

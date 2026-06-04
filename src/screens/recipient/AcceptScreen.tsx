@@ -36,7 +36,7 @@ export default function AcceptScreen({
         {SR.accept.heading.l1} <span className="offset">{SR.accept.heading.l2}</span>
       </h1>
 
-      <div className="stagger" style={{ margin: '0 -24px', padding: '4px 24px 0', overflowY: 'auto' }}>
+      <div className="stagger" style={{ flex: 1, minHeight: 0, overflowY: 'auto', margin: '0 -24px', padding: '4px 24px 0' }}>
         <div>
           <label className="label">{SR.accept.placeLabel}</label>
           <div className="chips">

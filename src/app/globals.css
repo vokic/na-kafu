@@ -28,7 +28,6 @@
   --card:rgba(255,255,255,.12);--btn-bg:#FFFFFF;--btn-fg:#1a0820;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:#FFFFFF;--accent-on:#1a0820}
 .phone[data-theme="holo"] .holobg{display:block}
 .phone[data-theme="holo"] .card,.phone[data-theme="holo"] .reveal-card,.phone[data-theme="holo"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
-.phone[data-theme="holo"] .smoosh,.phone[data-theme="holo"] .qmark{backdrop-filter:blur(8px)}
 .phone[data-theme="holo"] .hintbar{backdrop-filter:blur(10px)}
 .phone[data-theme="holo"] h1,.phone[data-theme="holo"] .lead,.phone[data-theme="holo"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
 
@@ -37,7 +36,6 @@
   --card:rgba(255,255,255,.12);--btn-bg:rgba(255,255,255,.18);--btn-fg:#FFFFFF;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:rgba(255,255,255,.92);--accent-on:#160726}
 .phone[data-theme="aurora"] .aurorabg{display:block}
 .phone[data-theme="aurora"] .card,.phone[data-theme="aurora"] .reveal-card,.phone[data-theme="aurora"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
-.phone[data-theme="aurora"] .smoosh,.phone[data-theme="aurora"] .qmark{backdrop-filter:blur(8px)}
 .phone[data-theme="aurora"] .hintbar{backdrop-filter:blur(10px)}
 .phone[data-theme="aurora"] h1,.phone[data-theme="aurora"] .lead,.phone[data-theme="aurora"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
 /* glass buttons (this skin only) */
@@ -120,7 +118,7 @@ body{font-family:var(--font-schibsted),sans-serif;background:#E4E0D7;min-height:
   border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
 .role:active{transform:scale(.94)}
 
-.screen{display:none;flex:1;flex-direction:column;position:relative;z-index:1}
+.screen{display:none;flex:1;min-height:0;flex-direction:column;position:relative;z-index:1}
 .screen.on{display:flex;animation:rise .45s cubic-bezier(.22,1,.32,1)}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .stagger>*{opacity:0;animation:rise .5s cubic-bezier(.22,1,.32,1) forwards}
@@ -243,7 +241,7 @@ img{max-width:100%;display:block}
    ========================================================================= */
 @media (max-width:480px){
   body{padding:0;align-items:stretch;justify-content:stretch;background:var(--bg);overflow-x:hidden}
-  .phone{max-width:none;width:100%;min-height:100dvh;border-radius:0;box-shadow:none;
+  .phone{max-width:none;width:100%;height:100dvh;border-radius:0;box-shadow:none;
     padding-top:calc(20px + env(safe-area-inset-top));
     padding-bottom:calc(24px + env(safe-area-inset-bottom));
     padding-left:calc(20px + env(safe-area-inset-left));
