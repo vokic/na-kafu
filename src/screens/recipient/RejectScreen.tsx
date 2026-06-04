@@ -24,7 +24,7 @@ export default function RejectScreen({
   return (
     <section className="screen on">
       <h1 className="sm">
-        {SR.reject.heading.l1} <span className="offset">{SR.reject.heading.l2}</span>
+        {SR.reject.heading.l1} <span className="offset" style={{ marginLeft: 0 }}>{SR.reject.heading.l2}</span>
       </h1>
       <p className="lead">{SR.reject.lead}</p>
 

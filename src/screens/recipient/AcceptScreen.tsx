@@ -33,7 +33,7 @@ export default function AcceptScreen({
   return (
     <section className="screen on">
       <h1 className="sm">
-        {SR.accept.heading.l1} <span className="offset">{SR.accept.heading.l2}</span>
+        {SR.accept.heading.l1} <span className="offset" style={{ marginLeft: 0 }}>{SR.accept.heading.l2}</span>
       </h1>
 
       <div className="stagger" style={{ margin: '0 -24px', padding: '4px 24px 0' }}>

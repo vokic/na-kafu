@@ -53,10 +53,10 @@ export default function BuildScreen({
         </button>
       </div>
 
-      <div className="hintbar" dangerouslySetInnerHTML={{ __html: c.hint }} />
+      <div className="hintbar" style={{ marginBottom: 20 }} dangerouslySetInnerHTML={{ __html: c.hint }} />
 
       <h1 className="sm">
-        {SR.build.heading.l1} <span className="offset">{SR.build.heading.l2}</span>
+        {SR.build.heading.l1} <span className="offset" style={{ marginLeft: 0 }}>{SR.build.heading.l2}</span>
       </h1>
 
       <div className="stagger" style={{ margin: '0 -22px', padding: '8px 22px 0' }}>
