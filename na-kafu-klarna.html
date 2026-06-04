@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>na kafu? — Klarna stil</title>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  .phone[data-theme="light"]{--bg:#FAF5EB;--fg:#0D0419;--muted:rgba(13,4,25,.55);--line:rgba(13,4,25,.15);
+    --card:#FFFFFF;--btn-bg:#0D0419;--btn-fg:#FAF5EB;--block:#FFB3C7;--block-fg:#0D0419;--accent:#FFB3C7;--accent-on:#0D0419}
+  .phone[data-theme="dark"]{--bg:#0D0419;--fg:#FAF5EB;--muted:rgba(250,245,235,.6);--line:rgba(250,245,235,.18);
+    --card:#1A0F28;--btn-bg:#FFB3C7;--btn-fg:#0D0419;--block:#FFB3C7;--block-fg:#0D0419;--accent:#FFB3C7;--accent-on:#0D0419}
+  .phone[data-theme="pink"]{--bg:#FFB3C7;--fg:#0D0419;--muted:rgba(13,4,25,.6);--line:rgba(13,4,25,.2);
+    --card:#FFFFFF;--btn-bg:#0D0419;--btn-fg:#FFB3C7;--block:#0D0419;--block-fg:#FFB3C7;--accent:#0D0419;--accent-on:#FFB3C7}
+
+  .phone[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#7B97A4;--line:#F0E4DF;
+    --card:#FFFFFF;--btn-bg:#FB4E8D;--btn-fg:#FFFFFF;--block:#FF6FA0;--block-fg:#FFFFFF;--accent:#FB4E8D;--accent-on:#FFFFFF;
+    font-family:'Poppins',sans-serif}
+
+  .phone[data-theme="holo"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.66);--line:rgba(255,255,255,.26);
+    --card:rgba(255,255,255,.12);--btn-bg:#FFFFFF;--btn-fg:#1a0820;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:#FFFFFF;--accent-on:#1a0820}
+  .phone[data-theme="holo"] .holobg{display:block}
+  .phone[data-theme="holo"] .card,.phone[data-theme="holo"] .reveal-card,.phone[data-theme="holo"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
+  .phone[data-theme="holo"] .smoosh,.phone[data-theme="holo"] .qmark{backdrop-filter:blur(8px)}
+  .phone[data-theme="holo"] .hintbar{backdrop-filter:blur(10px)}
+  .phone[data-theme="holo"] h1,.phone[data-theme="holo"] .lead,.phone[data-theme="holo"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
+
+  /* ===== Aurora skin (animation from holo-animacija) + glass buttons ===== */
+  .phone[data-theme="aurora"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.68);--line:rgba(255,255,255,.30);
+    --card:rgba(255,255,255,.12);--btn-bg:rgba(255,255,255,.18);--btn-fg:#FFFFFF;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:rgba(255,255,255,.92);--accent-on:#160726}
+  .phone[data-theme="aurora"] .aurorabg{display:block}
+  .phone[data-theme="aurora"] .card,.phone[data-theme="aurora"] .reveal-card,.phone[data-theme="aurora"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
+  .phone[data-theme="aurora"] .smoosh,.phone[data-theme="aurora"] .qmark{backdrop-filter:blur(8px)}
+  .phone[data-theme="aurora"] .hintbar{backdrop-filter:blur(10px)}
+  .phone[data-theme="aurora"] h1,.phone[data-theme="aurora"] .lead,.phone[data-theme="aurora"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
+  /* glass buttons (this skin only) */
+  .phone[data-theme="aurora"] .btn-primary{background:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(13px);border:1px solid rgba(255,255,255,.34);box-shadow:0 12px 32px -16px rgba(0,0,0,.55)}
+  .phone[data-theme="aurora"] .btn-yes{background:rgba(31,205,176,.3);border-color:rgba(120,255,225,.55)}
+  .phone[data-theme="aurora"] .btn-outline{border-color:rgba(255,255,255,.5);backdrop-filter:blur(10px)}
+  /* white panels -> frosted glass (aurora only) */
+  .phone[data-theme="aurora"] .hintbar,
+  .phone[data-theme="aurora"] .pill{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.32);backdrop-filter:blur(12px)}
+  .phone[data-theme="aurora"] .seg button.on{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(12px)}
+  .phone[data-theme="aurora"] .chip.sel{background:rgba(255,255,255,.28);color:#fff;border-color:rgba(255,255,255,.55);backdrop-filter:blur(12px)}
+  .phone[data-theme="aurora"] .qmark{background:rgba(255,255,255,.18);color:#fff}
+  .phone[data-theme="aurora"] .egg{background:rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(10px)}
+  /* aurora animated background */
+  .aurorabg{position:absolute;inset:0;z-index:0;display:none;overflow:hidden;border-radius:40px}
+  .aurorabg .amesh{position:absolute;inset:-28%;filter:url(#liquid2) blur(34px)}
+  .aurorabg .ablob{position:absolute;border-radius:50%;will-change:transform}
+  .aurorabg .ab1{width:95%;height:70%;top:-14%;left:-12%;background:radial-gradient(circle at 50% 50%,#7a1fd0 0%,#3a0a6e 45%,transparent 66%);animation:ad1 19s ease-in-out infinite}
+  .aurorabg .ab2{width:85%;height:60%;top:18%;left:6%;background:radial-gradient(circle at 50% 50%,#ff1e9c 0%,transparent 62%);animation:ad2 23s ease-in-out infinite}
+  .aurorabg .ab3{width:80%;height:55%;top:42%;left:-8%;background:radial-gradient(circle at 50% 50%,#ff4d6e 0%,transparent 60%);animation:ad3 27s ease-in-out infinite}
+  .aurorabg .ab4{width:90%;height:62%;bottom:-12%;left:-6%;background:radial-gradient(circle at 50% 50%,#ff8a18 0%,transparent 62%);animation:ad4 21s ease-in-out infinite}
+  .aurorabg .ab5{width:60%;height:45%;bottom:-6%;right:-10%;background:radial-gradient(circle at 50% 50%,#ffd23f 0%,transparent 60%);animation:ad5 25s ease-in-out infinite}
+  .aurorabg .ab6{width:46%;height:40%;top:34%;left:30%;background:radial-gradient(circle at 50% 50%,#ff5edb 0%,transparent 58%);animation:ad2 17s ease-in-out infinite reverse}
+  .aurorabg .astreak{position:absolute;left:-25%;right:-25%;height:42%;top:26%;background:linear-gradient(96deg,transparent 8%,#00e6ff 26%,#7cff7c 42%,#ffffff 50%,#ff5ed0 60%,#ffd23f 76%,transparent 92%);filter:blur(26px);opacity:.55;mix-blend-mode:screen;will-change:transform;animation:astreak 15s ease-in-out infinite}
+  .aurorabg .agrain{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  @keyframes ad1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(7%,9%) scale(1.18)}}
+  @keyframes ad2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-9%,7%) scale(1.22)}}
+  @keyframes ad3{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(10%,-8%) scale(1.25)}}
+  @keyframes ad4{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-7%,-10%) scale(1.2)}}
+  @keyframes ad5{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-12%,6%) scale(1.3)}}
+  @keyframes astreak{0%,100%{transform:translateY(-26px) rotate(-5deg);opacity:.5}50%{transform:translateY(46px) rotate(3deg);opacity:.7}}
+  /* animated holographic liquid sheet (only shows in holo theme) */
+  .holobg{position:absolute;inset:0;z-index:0;display:none;overflow:hidden;border-radius:40px}
+  .holobg::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to bottom,rgba(8,2,16,.30) 0%,transparent 22%,transparent 56%,rgba(22,4,32,.40) 100%)}
+  .holobg .mesh{position:absolute;inset:-46%;filter:url(#liquid) blur(11px);animation:hspin 40s ease-in-out infinite}
+  .holobg .flow{position:absolute;inset:0;background:linear-gradient(158deg,#1c0a3e 0%,#3a14a0 13%,#5a3fe0 24%,#2f7fe0 35%,#1fb0c0 45%,#6a5fd0 53%,#c23a9e 61%,#ff3d7e 70%,#ff7a2e 84%,#ffc23f 100%)}
+  .holobg .sheen{position:absolute;inset:-12%;background:conic-gradient(from 30deg at 58% 42%,#5a3fe0,#2f7fe0,#1fb0c0,#c23a9e,#ff7a2e,#ffc23f,#5a3fe0);mix-blend-mode:screen;opacity:.24;animation:hrot 28s linear infinite}
+  .holobg .blob{position:absolute;border-radius:50%;mix-blend-mode:screen;will-change:transform}
+  .holobg .bA{width:72%;height:56%;bottom:4%;right:-12%;background:radial-gradient(circle,#c33f8c 0%,transparent 62%);animation:hd2 16s ease-in-out infinite}
+  .holobg .bB{width:66%;height:52%;top:24%;left:-14%;background:radial-gradient(circle,#1f9a8e 0%,transparent 62%);animation:hd3 20s ease-in-out infinite reverse}
+  .holobg .streak{position:absolute;left:-30%;right:-30%;height:30%;top:40%;background:linear-gradient(98deg,transparent 10%,rgba(255,240,220,.45) 32%,#ffffff 50%,rgba(255,210,150,.4) 68%,transparent 92%);filter:blur(14px);opacity:.55;mix-blend-mode:screen;animation:hstreak 12s ease-in-out infinite}
+  @keyframes hspin{0%,100%{transform:rotate(0) scale(1.06)}50%{transform:rotate(6deg) scale(1.2)}}
+  @keyframes hrot{to{transform:rotate(360deg)}}
+  @keyframes hd2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-10%,-8%) scale(1.28)}}
+  @keyframes hd3{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(12%,10%) scale(1.32)}}
+  @keyframes hstreak{0%,100%{transform:translateY(-42px) rotate(-7deg);opacity:.45}50%{transform:translateY(52px) rotate(5deg);opacity:.8}}
+  .phone[data-theme="peach"] h1{font-size:36px;line-height:1.12;letter-spacing:-.8px;font-weight:700}
+  .phone[data-theme="peach"] h1.sm{font-size:30px}
+  .phone[data-theme="peach"] .offset{margin-left:0}
+  .phone[data-theme="peach"] .card,.phone[data-theme="peach"] .reveal-card,.phone[data-theme="peach"] .result-card{box-shadow:0 26px 50px -26px rgba(150,95,95,.42),0 8px 20px -14px rgba(40,20,30,.06)}
+  .phone[data-theme="peach"] .smoosh{background:linear-gradient(135deg,#FF89B6,#F63E86);filter:drop-shadow(0 16px 22px rgba(251,78,141,.5))}
+  .phone[data-theme="peach"] .smoosh.calm{background:#9DB4C0;filter:drop-shadow(0 14px 20px rgba(124,151,165,.45))}
+  .phone[data-theme="peach"] .qmark{filter:drop-shadow(0 16px 22px rgba(251,78,141,.42))}
+  .phone[data-theme="peach"] .btn-primary{box-shadow:0 16px 30px -12px rgba(251,78,141,.4)}
+  .phone[data-theme="peach"] .btn-yes{background:#1FCDB0;color:#fff;box-shadow:0 16px 30px -12px rgba(31,205,176,.4)}
+  .phone[data-theme="peach"] .chip.sel{box-shadow:0 8px 20px -8px rgba(251,78,141,.35)}
+  .phone[data-theme="peach"] .seg button.on{box-shadow:0 8px 16px -8px rgba(251,78,141,.3)}
+  .phone[data-theme="peach"] .pill{background:#F6EEEA;color:#7B97A4}
+  .phone[data-theme="peach"] .hintbar{background:#FFE6F0;color:#E83C7B}
+  .phone[data-theme="peach"] .result-card .v.contact{color:#15B79A}
+
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:'Schibsted Grotesk',sans-serif;background:#E4E0D7;min-height:100dvh;
+    display:flex;align-items:center;justify-content:center;padding:14px;overflow-x:hidden}
+
+  .phone{position:relative;width:100%;max-width:404px;min-height:806px;border-radius:40px;padding:24px 22px 28px;
+    display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--fg);
+    box-shadow:0 40px 90px -40px rgba(40,20,40,.5);transition:background .35s,color .35s}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;position:relative;z-index:2}
+  .brand{font-weight:800;font-size:21px;letter-spacing:-.6px}
+  .tbright{display:flex;align-items:center;gap:12px}
+  .themesw{display:flex;gap:6px}
+  .sw{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);cursor:pointer;padding:0;transition:.15s}
+  .sw.light{background:#FAF5EB}.sw.dark{background:#0D0419}.sw.pink{background:#FFB3C7}.sw.peach{background:linear-gradient(135deg,#FF6FA0,#FFC58A)}.sw.holo{background:conic-gradient(from 0deg,#5a3fe0,#2f7fe0,#1fb0c0,#c23a9e,#ff7a2e,#ffc23f,#5a3fe0)}.sw.aurora{background:conic-gradient(from 0deg,#7a1fd0,#ff1e9c,#ff4d6e,#ff8a18,#ffd23f,#00e6ff,#7a1fd0)}
+  .sw.on{outline:2px solid var(--fg);outline-offset:2px;border-color:transparent}
+  .sw:active{transform:scale(.9)}
+  .role{font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:1.5px solid var(--line);
+    border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
+  .role:active{transform:scale(.94)}
+
+  .screen{display:none;flex:1;flex-direction:column;position:relative;z-index:1}
+  .screen.on{display:flex;animation:rise .45s cubic-bezier(.22,1,.32,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .stagger>*{opacity:0;animation:rise .5s cubic-bezier(.22,1,.32,1) forwards}
+  .stagger>*:nth-child(1){animation-delay:.04s}.stagger>*:nth-child(2){animation-delay:.12s}
+  .stagger>*:nth-child(3){animation-delay:.2s}.stagger>*:nth-child(4){animation-delay:.28s}
+  .stagger>*:nth-child(5){animation-delay:.36s}.stagger>*:nth-child(6){animation-delay:.44s}
+
+  h1{font-weight:800;font-size:50px;line-height:.92;letter-spacing:-2px}
+  h1.sm{font-size:40px}
+  .offset{display:inline-block;color:var(--accent);margin-left:.5em}
+  .lead{color:var(--muted);font-size:15px;line-height:1.5;margin-top:16px;font-weight:500}
+  .label{font-weight:700;font-size:12px;margin:18px 0 8px;display:block;text-transform:uppercase;letter-spacing:.4px}
+  .label small{text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500}
+
+  .smoosh{width:142px;height:130px;clip-path:url(#heartclip);background:var(--block);
+    color:var(--block-fg);display:flex;align-items:center;justify-content:center;padding-bottom:18px;
+    animation:wob 6s ease-in-out infinite, beat 1.7s ease-in-out infinite}
+  .smoosh.sm{width:112px;height:102px;padding-bottom:13px}
+  .smoosh.calm{background:#9DB4C0;color:#fff;animation:wob 6s ease-in-out infinite}
+  @keyframes wob{0%,100%{rotate:-4deg;transform:skewX(0)}50%{rotate:5deg;transform:skewX(-3deg)}}
+  @keyframes beat{0%,100%{scale:1}9%{scale:1.12}18%{scale:.99}27%{scale:1.07}42%{scale:1}}
+
+  .dots{display:flex;gap:7px;justify-content:center;margin-top:22px}
+  .dots i{width:8px;height:8px;border-radius:50%;background:var(--fg);opacity:.25}
+  .dots i.on{width:24px;border-radius:5px;opacity:1;background:var(--accent)}
+
+  input[type=text],textarea{width:100%;font-family:inherit;font-size:16px;font-weight:500;color:var(--fg);background:transparent;
+    border:2px solid var(--line);border-radius:999px;padding:14px 18px;outline:none;transition:.2s}
+  input::placeholder,textarea::placeholder{color:var(--muted)}
+  textarea{resize:none;min-height:74px;line-height:1.5;border-radius:22px}
+  input:focus,textarea:focus{border-color:var(--fg)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{font-family:inherit;font-size:14px;font-weight:600;color:var(--fg);background:transparent;
+    border:2px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;transition:.16s}
+  .chip:active{transform:scale(.94)}
+  .chip.sel{border-color:transparent;background:var(--accent);color:var(--accent-on)}
+
+  .seg{display:flex;gap:4px;border-radius:999px;padding:4px;border:2px solid var(--line)}
+  .seg.modeseg{margin-bottom:8px}
+  .seg button{flex:1;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:14px;color:var(--muted);padding:11px;border-radius:999px;cursor:pointer;transition:.2s}
+  .seg button.on{background:var(--accent);color:var(--accent-on)}
+
+  .btn{width:100%;font-family:inherit;font-weight:700;font-size:17px;border:none;border-radius:999px;padding:18px;
+    cursor:pointer;transition:transform .14s,opacity .2s;letter-spacing:-.2px}
+  .btn:active{transform:translateY(2px) scale(.99)}
+  .btn-primary{background:var(--btn-bg);color:var(--btn-fg)}
+  .btn-outline{background:transparent;color:var(--fg);border:2px solid var(--fg)}
+  .btn-ghost{background:transparent;color:var(--muted);font-weight:600;font-size:15px}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn-row{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:18px}
+  .fillbtn{position:absolute;bottom:14px;right:14px;z-index:60;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:#fff;background:rgba(20,8,24,.5);border:none;border-radius:50%;padding:0;cursor:pointer;
+    backdrop-filter:blur(6px);box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
+  .fillbtn:active{transform:scale(.9)}
+
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:28px}
+  .invite{padding:28px 24px;text-align:center}
+  .invite .smwrap{display:flex;justify-content:center;margin-bottom:8px}
+  .invite .qmark{display:none;width:120px;height:110px;clip-path:url(#heartclip);background:var(--accent);color:var(--accent-on);
+    font-size:46px;font-weight:800;align-items:center;justify-content:center;margin:0 auto 8px;padding-bottom:14px;
+    animation:wob 6s ease-in-out infinite, beat 1.7s ease-in-out infinite}
+  .invite .from{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+  .invite .msg{font-size:23px;line-height:1.28;margin:12px 0 18px;font-weight:700;letter-spacing:-.5px}
+  .invite .opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .pill{background:var(--accent);color:var(--accent-on);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700}
+
+  .hintbar{background:var(--accent);color:var(--accent-on);border-radius:18px;padding:14px 16px;margin-top:14px;font-size:13px;font-weight:600;line-height:1.45}
+  .hintbar b{font-weight:800}
+
+  .link-box{border-radius:999px;padding:5px 6px 5px 20px;font-size:13.5px;color:var(--muted);display:flex;align-items:center;
+    justify-content:space-between;gap:10px;font-weight:600;border:2px solid var(--line)}
+  .copy{background:var(--btn-bg);color:var(--btn-fg);border:none;border-radius:999px;padding:12px 18px;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer}
+
+  .reveal-card{width:100%;border-radius:28px;padding:40px 26px;margin-top:18px;background:var(--card);border:1.5px solid var(--line);text-align:center}
+  .reveal-card .who{font-size:46px;font-weight:800;letter-spacing:-1.6px;color:var(--accent);animation:reveal .65s cubic-bezier(.2,1.6,.4,1)}
+  .reveal-card .handle{color:var(--muted);font-weight:600;margin-top:8px;font-size:15px}
+  .avatar{display:none;width:86px;height:86px;border-radius:50%;background-size:cover;background-position:center;margin:0 auto 8px;border:3px solid var(--accent)}
+  .avatar.has{display:block}
+  .reveal-card .avatar{width:98px;height:98px;margin:0 auto 16px}
+  .about{font-size:14px;color:var(--muted);font-weight:500;line-height:1.45;margin:6px 18px 0}
+  .themepick{display:flex;gap:12px}
+  .themepick .sw{width:32px;height:32px}
+  .photorow{display:flex;align-items:center;gap:13px}
+  .photobtn{font-family:inherit;font-weight:600;font-size:14px;color:var(--fg);background:transparent;border:2px dashed var(--line);border-radius:999px;padding:11px 18px;cursor:pointer}
+  .photobtn:active{transform:scale(.96)}
+  .photoprev{width:48px;height:48px;border-radius:50%;background-size:cover;background-position:center;border:2px solid var(--line);display:none}
+  .photoprev.has{display:block}
+  @keyframes reveal{from{transform:scale(.5) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+  .result-card{border-radius:22px;padding:22px;margin-top:6px;background:var(--card);border:1.5px solid var(--line)}
+  .result-card .k{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .result-card .v{font-size:18px;font-weight:700;margin-top:4px}
+  .result-card .v.contact{font-size:24px;font-weight:800;color:var(--accent);letter-spacing:-.5px}
+  .note{border-radius:14px;padding:12px 15px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:14px;text-align:center;border:1.5px solid var(--line)}
+  .smwrap-c{display:flex;justify-content:center;position:relative}
+  #homeHeart{cursor:pointer}
+  .egg{position:absolute;top:-12px;left:50%;transform:translate(-50%,-100%) scale(.5);background:var(--accent);color:var(--accent-on);
+    font-weight:700;font-size:14px;padding:10px 16px;border-radius:999px;white-space:nowrap;opacity:0;pointer-events:none;
+    transition:transform .35s cubic-bezier(.2,1.7,.4,1),opacity .25s;z-index:5}
+  .egg.show{opacity:1;transform:translate(-50%,-100%) scale(1)}
+  .egg::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+    border-left:7px solid transparent;border-right:7px solid transparent;border-top:7px solid var(--accent)}
+</style>
+</head>
+<body>
+<div class="phone" id="phone" data-theme="light">
+
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+    <clipPath id="heartclip" clipPathUnits="objectBoundingBox"><path d="M0.5,0.97 C0.18,0.72 0,0.46 0,0.28 C0,0.1 0.14,0 0.28,0 C0.4,0 0.47,0.07 0.5,0.17 C0.53,0.07 0.6,0 0.72,0 C0.86,0 1,0.1 1,0.28 C1,0.46 0.82,0.72 0.5,0.97 Z"/></clipPath>
+  </defs></svg>
+
+  <div class="holobg">
+    <div class="mesh"><div class="flow"></div><div class="sheen"></div><div class="blob bA"></div><div class="blob bB"></div><div class="streak"></div></div>
+  </div>
+  <svg width="0" height="0" style="position:absolute"><defs>
+    <filter id="liquid"><feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves="2" seed="6" result="n"><animate attributeName="baseFrequency" dur="20s" values="0.004 0.007;0.011 0.015;0.006 0.01;0.004 0.007" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="140" xChannelSelector="R" yChannelSelector="G"><animate attributeName="scale" dur="15s" values="100;200;140;100" repeatCount="indefinite"/></feDisplacementMap></filter>
+  </defs></svg>
+
+  <div class="aurorabg">
+    <div class="amesh"><div class="ablob ab1"></div><div class="ablob ab2"></div><div class="ablob ab3"></div><div class="ablob ab4"></div><div class="ablob ab5"></div><div class="ablob ab6"></div></div>
+    <div class="astreak"></div>
+    <div class="agrain"></div>
+  </div>
+  <svg width="0" height="0" style="position:absolute"><defs>
+    <filter id="liquid2"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.009" numOctaves="2" seed="4" result="n"><animate attributeName="baseFrequency" dur="26s" values="0.006 0.009;0.011 0.014;0.006 0.009" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="110" xChannelSelector="R" yChannelSelector="G"/></filter>
+  </defs></svg>
+
+  <div class="topbar">
+    <div class="brand">na kafu?</div>
+    <div class="tbright">
+      <div class="themesw">
+        <button class="sw light on" data-theme="light" onclick="setTheme(this)" aria-label="Off White"></button>
+        <button class="sw dark" data-theme="dark" onclick="setTheme(this)" aria-label="Black"></button>
+        <button class="sw pink" data-theme="pink" onclick="setTheme(this)" aria-label="Klarna Pink"></button>
+        <button class="sw peach" data-theme="peach" onclick="setTheme(this)" aria-label="Soft glossy"></button>
+        <button class="sw holo" data-theme="holo" onclick="setTheme(this)" aria-label="Holo"></button>
+        <button class="sw aurora" data-theme="aurora" onclick="setTheme(this)" aria-label="Aurora"></button>
+      </div>
+      <button class="role" id="roleBtn" onclick="jump()">demo</button>
+    </div>
+  </div>
+
+  <button class="fillbtn" onclick="fillAll()" title="dev: popuni polja">⚡</button>
+
+  <!-- HOME -->
+  <section class="screen on" id="s-home">
+    <div class="stagger" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div class="smwrap-c" style="margin-bottom:30px">
+        <div class="egg" id="egg">hej ćao 👋</div>
+        <div class="smoosh" id="homeHeart" onclick="tapHeart()"><svg width="62" height="62" viewBox="0 0 64 64" fill="currentColor"><path d="M10 16h44a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V20a4 4 0 0 1 4-4Z"/><path d="M8 20l24 16 24-16" fill="none" stroke="var(--block)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <h1>Pozovi<br>nekoga,<br><span class="offset">bez treme.</span></h1>
+      <p class="lead" style="max-width:30ch">Pošalji pozivnicu na izlazak — sam, ili diskretno preko zajedničkog druga.</p>
+      <div class="dots"><i></i><i class="on"></i><i></i></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="go('build');applyBuildCopy()">Napravi pozivnicu</button></div>
+  </section>
+
+  <!-- BUILD -->
+  <section class="screen" id="s-build">
+    <div class="seg modeseg" id="modeSeg"><button class="on" data-mode="direct" onclick="setMode(this)">Šaljem sam</button><button data-mode="friend" onclick="setMode(this)">Preko druga</button></div>
+    <h1 class="sm">Za <span class="offset">koga?</span></h1>
+    <div class="stagger" style="overflow-y:auto;margin:0 -22px;padding:8px 22px 0">
+      <div><label class="label">Ime ili nadimak</label><input type="text" id="toName" placeholder="Mila" oninput="validateBuild()"></div>
+      <div><label class="label">Poruka</label><textarea id="msg" oninput="validateBuild()"></textarea></div>
+      <div><label class="label">Gde biste mogli? <small>· izaberi 2–4</small></label><div class="chips" id="placeChips"></div></div>
+      <div><label class="label">Tvoj potpis <small id="potpisSub">· vidi ga odmah</small></label><input type="text" id="fromName" placeholder="Marko @marko" oninput="validateBuild()"></div>
+      <div><label class="label">O sebi <small>· opciono</small></label><textarea id="aboutMe" placeholder="Par reči o tebi — šta voliš, čime se baviš."></textarea></div>
+      <div><label class="label">Slika <small>· opciono</small></label>
+        <input type="file" accept="image/*" id="photoInput" onchange="loadPhoto(this)" style="display:none">
+        <div class="photorow"><button type="button" class="photobtn" onclick="document.getElementById('photoInput').click()">+ Dodaj sliku</button><div class="photoprev" id="photoPrev"></div></div>
+      </div>
+      <div><label class="label">Tema pozivnice</label>
+        <div class="themepick">
+          <button type="button" class="sw light on" data-theme="light" onclick="setTheme(this)"></button>
+          <button type="button" class="sw dark" data-theme="dark" onclick="setTheme(this)"></button>
+          <button type="button" class="sw pink" data-theme="pink" onclick="setTheme(this)"></button>
+          <button type="button" class="sw peach" data-theme="peach" onclick="setTheme(this)"></button>
+          <button type="button" class="sw holo" data-theme="holo" onclick="setTheme(this)"></button>
+          <button type="button" class="sw aurora" data-theme="aurora" onclick="setTheme(this)"></button>
+        </div>
+      </div>
+      <div class="hintbar" id="modeHint"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="sendBtn" onclick="send()" disabled>Pošalji pozivnicu</button>
+      <button class="btn btn-ghost" onclick="go('home')">Nazad</button>
+    </div>
+  </section>
+
+  <!-- SENT -->
+  <section class="screen" id="s-sent">
+    <div class="stagger" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div class="smwrap-c" style="margin-bottom:24px">
+        <div class="smoosh sm"><svg width="56" height="56" viewBox="0 0 64 64" fill="currentColor"><path d="M58 6 6 28l18 6 4 22 9-14 14 4z"/></svg></div>
+      </div>
+      <h1 class="sm" id="sentTitle">Link<br><span class="offset">spreman.</span></h1>
+      <p class="lead" id="sentLead" style="max-width:31ch"></p>
+      <div class="link-box" style="margin-top:22px"><span>na-kafu.rs/p/8fK2</span><button class="copy" onclick="this.textContent='Kopirano'">Kopiraj</button></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="openInvite()">Pogledaj iz njene perspektive</button>
+      <button class="btn btn-ghost" onclick="reset()">Napravi novu</button>
+    </div>
+  </section>
+
+  <!-- RECEIVE -->
+  <section class="screen" id="s-receive">
+    <h1 class="sm" id="recvTitle" style="margin-bottom:18px">Pozivnica<br><span class="offset">za tebe.</span></h1>
+    <div class="card invite stagger">
+      <div class="smwrap" id="inEnv"><div class="smoosh sm"><svg width="48" height="48" viewBox="0 0 64 64" fill="currentColor"><path d="M10 16h44a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V20a4 4 0 0 1 4-4Z"/><path d="M8 20l24 16 24-16" fill="none" stroke="var(--block)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="qmark" id="inMystery">?</div>
+      <div class="avatar" id="inAvatar"></div>
+      <div class="from" id="inFrom">Pozivnica</div>
+      <div class="about" id="inAbout" style="display:none"></div>
+      <div class="msg" id="inMsg">…</div>
+      <div class="opts" id="inOpts"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-yes" id="recvYes" onclick="go('accept')">Prihvati</button>
+      <button class="btn btn-outline" id="recvNo" onclick="rejectFlow()">Odbij, hvala</button>
+    </div>
+  </section>
+
+  <!-- REVEAL -->
+  <section class="screen" id="s-reveal">
+    <div class="stagger" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <h1 class="sm">Pozivnicu<br><span class="offset">šalje…</span></h1>
+      <div class="reveal-card"><div class="avatar" id="revAvatar"></div><div class="who" id="revWho">Marko</div><div class="handle" id="revHandle"></div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-yes" onclick="go('accept')">Prihvati</button>
+      <button class="btn btn-outline" onclick="rejectFlow()">Ipak ne</button>
+    </div>
+  </section>
+
+  <!-- ACCEPT -->
+  <section class="screen" id="s-accept">
+    <h1 class="sm">Biraj <span class="offset">mesto.</span></h1>
+    <div class="stagger" style="margin:0 -24px;padding:4px 24px 0;overflow-y:auto">
+      <div><label class="label">Gde ti odgovara</label><div class="chips" id="acceptChips"></div></div>
+      <div id="contactBlock">
+        <div><label class="label">Ostavi kontakt <small>· opciono</small></label>
+          <div class="seg" id="contactSeg">
+            <button class="on" data-c="Instagram" onclick="pickContact(this)">Insta</button>
+            <button data-c="Telefon" onclick="pickContact(this)">Tel</button>
+            <button data-c="Email" onclick="pickContact(this)">Email</button>
+            <button data-c="Snapchat" onclick="pickContact(this)">Snap</button>
+          </div>
+        </div>
+        <div style="margin-top:10px"><input type="text" id="contactVal" placeholder="@tvoj_nalog" oninput="validateAccept()"></div>
+      </div>
+      <div><label class="label">Poruka nazad <small>· opciono</small></label><textarea id="replyNote" placeholder="Dodaj reč-dve ako želiš."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-yes" id="acceptBtn" onclick="finish('accept')" disabled>Pošalji odgovor</button>
+      <button class="btn btn-ghost" onclick="go('receive')">Nazad</button>
+    </div>
+  </section>
+
+  <!-- REJECT -->
+  <section class="screen" id="s-reject">
+    <h1 class="sm">Reci ne, <span class="offset">lepo.</span></h1>
+    <p class="lead">Razlog je obavezan, ali ostaje između vas. Pomaže drugoj strani.</p>
+    <div class="stagger" style="margin-top:4px">
+      <div><label class="label">Razlog</label><div class="chips" id="reasonChips"></div></div>
+      <div><label class="label">Poruka <small>· opciono</small></label><textarea id="reasonNote" placeholder="Drago mi je što si pitao."></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="rejectBtn" onclick="finish('reject')" disabled>Pošalji odgovor</button>
+      <button class="btn btn-ghost" onclick="go('receive')">Nazad</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="s-result">
+    <div class="stagger" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div class="smwrap-c" id="resIcon" style="margin-bottom:20px"></div>
+      <h1 class="sm" id="resTitle">Pristala je.</h1>
+      <div class="result-card" id="resCard" style="margin-top:18px"></div>
+      <div class="note" id="resNote" style="display:none"></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="reset()">Napravi novu pozivnicu</button></div>
+  </section>
+</div>
+
+<script>
+  const PLACES=['Kafa','Piće','Večera','Šetnja','Bioskop','Klopa','Svirka','Izložba'];
+  const REASONS=['Već sam zauzet/a','Nije pravo vreme','Ne tražim ništa sad','Ne osećam tu privlačnost','Radije kao prijatelji'];
+  const COPY={
+    direct:{potpis:'· vidi ga odmah',send:'Pošalji pozivnicu',
+      hint:'<b>Šalješ sam.</b> Dobićeš link koji prosleđuješ simpatiji. Ona vidi da si ti.',
+      sentTitle:'Link<br><span class="offset">spreman.</span>',sentLead:'Podeli link sa <b>{ime}</b> preko Instagrama ili poruke. Javimo ti čim odgovori.',
+      recvTitle:'Pozivnica<br><span class="offset">za tebe.</span>'},
+    friend:{potpis:'· vidi se tek kad prihvati',send:'Napravi link za druga',
+      hint:'<b>Preko druga.</b> Daješ link drugu od poverenja da ga prosledi. Ostaješ skriven dok ne prihvati.',
+      sentTitle:'Link<br><span class="offset">spreman.</span>',sentLead:'Daj ovaj link drugu od poverenja da ga prosledi <b>{ime}</b>. Ti ostaješ skriven dok ne prihvati.',
+      recvTitle:'Stiglo ti je<br><span class="offset">preko druga.</span>'}
+  };
+  const SM_HEART='<div class="smoosh"><svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 34l11 11 23-25"/></svg></div>';
+  const SM_RAIN='<div class="smoosh calm"><svg width="58" height="56" viewBox="0 0 64 62" fill="currentColor"><path d="M20 36a14 14 0 0 1 1-28 16 16 0 0 1 31 5 12 12 0 0 1-3 23H20z"/><circle cx="24" cy="52" r="3"/><circle cx="38" cy="56" r="3"/><circle cx="50" cy="50" r="3"/></svg></div>';
+
+  const state={mode:'direct',to:'',msg:'',from:'',about:'',photo:'',places:[],contactType:'Instagram',contactVal:'',acceptPlace:'',reason:'',replyNote:''};
+
+  const SAMPLE_PHOTO='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF89B6"/><stop offset="1" stop-color="#F63E86"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/><text x="100" y="132" font-family="sans-serif" font-size="98" font-weight="800" fill="#fff" text-anchor="middle">M</text></svg>');
+  function setVal(id,v){const e=document.getElementById(id);if(e)e.value=v;}
+  function fillAll(){
+    setVal('toName','Mila');
+    setVal('msg','Video sam te na žurci kod Ane. Idemo na pravu kafu?');
+    setVal('fromName','Marko @marko_ns');
+    setVal('aboutMe','30, volim planinarenje, špageti i loš stand-up.');
+    [...pc.querySelectorAll('.chip')].forEach((c,i)=>{const want=i<3;if(c.classList.contains('sel')!==want)c.click();});
+    if(!state.photo){state.photo=SAMPLE_PHOTO;const pv=document.getElementById('photoPrev');if(pv){pv.style.backgroundImage='url("'+state.photo+'")';pv.classList.add('has');}}
+    validateBuild();
+    const ac=document.querySelector('#acceptChips .chip');if(ac&&!document.querySelector('#acceptChips .chip.sel'))ac.click();
+    setVal('contactVal','@mila_ns');setVal('replyNote','Hahah važi, ali ti častiš prvu!');if(window.validateAccept)validateAccept();
+    const rc=document.querySelector('#reasonChips .chip');if(rc&&!document.querySelector('#reasonChips .chip.sel'))rc.click();
+    setVal('reasonNote','Baš si drag, ali trenutno ne tražim ništa.');
+  }
+
+  function setTheme(btn){const t=btn.dataset.theme;document.getElementById('phone').dataset.theme=t;
+    document.querySelectorAll('.sw').forEach(b=>b.classList.toggle('on',b.dataset.theme===t));}
+  function setMode(btn){document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+    state.mode=btn.dataset.mode;applyBuildCopy();}
+
+  const pc=document.getElementById('placeChips');
+  PLACES.forEach(t=>{const b=document.createElement('button');b.className='chip';b.textContent=t;
+    b.onclick=()=>{b.classList.toggle('sel');syncPlaces();validateBuild();};pc.appendChild(b);});
+  function syncPlaces(){state.places=[...pc.querySelectorAll('.chip.sel')].map(c=>c.textContent.trim());}
+
+  function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+    const el=document.getElementById('s-'+id);el.classList.add('on');
+    el.querySelectorAll('.stagger').forEach(g=>{g.style.animation='none';g.offsetHeight;g.style.animation=''});
+    document.getElementById('roleBtn').textContent=['receive','reveal','accept','reject'].includes(id)?'primalac':id==='result'?'rezultat':'demo';}
+
+  function applyBuildCopy(){const c=COPY[state.mode];
+    document.getElementById('potpisSub').textContent=c.potpis;
+    document.getElementById('sendBtn').textContent=c.send;
+    document.getElementById('modeHint').innerHTML=c.hint;}
+  function validateBuild(){state.to=toName.value.trim();state.msg=msg.value.trim();state.from=fromName.value.trim();syncPlaces();
+    sendBtn.disabled=!(state.to&&state.msg&&state.from&&state.places.length>=2);}
+  function send(){state.about=document.getElementById('aboutMe').value.trim();const c=COPY[state.mode];sentTitle.innerHTML=c.sentTitle;sentLead.innerHTML=c.sentLead.replace('{ime}',state.to);go('sent');}
+
+  function openInvite(){const c=COPY[state.mode];const friend=state.mode==='friend';
+    recvTitle.innerHTML=c.recvTitle;
+    inMystery.style.display=friend?'flex':'none';
+    const showAv=!friend&&!!state.photo,av=document.getElementById('inAvatar');
+    av.classList.toggle('has',showAv);if(showAv)av.style.backgroundImage='url("'+state.photo+'")';
+    inEnv.style.display=(!friend&&!state.photo)?'flex':'none';
+    const ab=document.getElementById('inAbout');ab.style.display=state.about?'block':'none';ab.textContent=state.about||'';
+    inFrom.textContent=friend?'Nekome se dopadaš i želi da stupi u kontakt sa tobom':('Šalje · '+state.from);inFrom.style.textTransform=friend?'none':'uppercase';
+    inMsg.textContent='“'+state.msg+'”';
+    inOpts.innerHTML='';state.places.forEach(p=>{const s=document.createElement('span');s.className='pill';s.textContent=p;inOpts.appendChild(s);});
+    const yes=document.getElementById('recvYes');
+    if(friend){yes.textContent='Otkrij ko je';yes.onclick=showReveal;}else{yes.textContent='Prihvati';yes.onclick=()=>go('accept');}
+    const ac=document.getElementById('acceptChips');ac.innerHTML='';
+    state.places.forEach(p=>{const b=document.createElement('button');b.className='chip';b.textContent=p;
+      b.onclick=()=>{ac.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');state.acceptPlace=p;validateAccept();};ac.appendChild(b);});
+    document.getElementById('contactBlock').style.display='block';
+    state.acceptPlace='';state.contactVal='';document.getElementById('contactVal').value='';document.getElementById('replyNote').value='';acceptBtn.disabled=true;
+    go('receive');}
+
+  function showReveal(){const p=state.from.split('@');revWho.textContent=p[0].trim();revHandle.textContent=p[1]?'@'+p[1].trim():'';
+    const rav=document.getElementById('revAvatar');if(state.photo){rav.style.backgroundImage='url("'+state.photo+'")';rav.classList.add('has');}else{rav.classList.remove('has');}go('reveal');}
+  function loadPhoto(input){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();
+    r.onload=e=>{state.photo=e.target.result;const pv=document.getElementById('photoPrev');pv.style.backgroundImage='url("'+state.photo+'")';pv.classList.add('has');};r.readAsDataURL(f);}
+  function pickContact(btn){document.querySelectorAll('#contactSeg button').forEach(x=>x.classList.remove('on'));btn.classList.add('on');
+    state.contactType=btn.dataset.c;contactVal.placeholder={Instagram:'@tvoj_nalog',Telefon:'06x xxx xxxx',Email:'ime@mejl.com',Snapchat:'tvoj_snap'}[state.contactType];}
+  function validateAccept(){state.contactVal=contactVal.value.trim();acceptBtn.disabled=!state.acceptPlace;}
+
+  function rejectFlow(){const rc=document.getElementById('reasonChips');rc.innerHTML='';state.reason='';rejectBtn.disabled=true;
+    REASONS.forEach(r=>{const b=document.createElement('button');b.className='chip';b.textContent=r;
+      b.onclick=()=>{rc.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');state.reason=r;rejectBtn.disabled=false;};rc.appendChild(b);});
+    go('reject');}
+
+  function finish(kind){const card=resCard;resNote.style.display='none';
+    if(kind==='accept'){resIcon.innerHTML=SM_HEART;resTitle.textContent=state.to+' kaže da!';
+      let html='<div class="k">Mesto</div><div class="v">'+state.acceptPlace+'</div>';
+      if(state.contactVal){html+='<div class="k" style="margin-top:16px">'+state.contactType+'</div><div class="v contact">'+state.contactVal+'</div>';}
+      const rn=document.getElementById('replyNote').value.trim();
+      if(rn){html+='<div class="k" style="margin-top:16px">Njena poruka</div><div class="v" style="font-weight:500;font-size:15px">“'+rn+'”</div>';}
+      if(!state.contactVal&&state.mode==='friend'){resNote.style.display='block';resNote.textContent='Otkrila je ko si — javiće ti se, ili vas drug spoji.';}
+      card.innerHTML=html;}
+    else{resIcon.innerHTML=SM_RAIN;resTitle.textContent='Ovaj put ne.';const n=reasonNote.value.trim();
+      card.innerHTML='<div class="k">Razlog</div><div class="v">'+(state.reason||'—')+'</div>'+(n?'<div class="k" style="margin-top:16px">Poruka</div><div class="v" style="font-weight:500;font-size:15px">“'+n+'”</div>':'');
+      if(state.mode==='friend'){resNote.style.display='block';resNote.textContent='Ostao si skriven — niko ne zna da si ti pitao.';}}
+    go('result');}
+
+  function reset(){Object.assign(state,{mode:'direct',to:'',msg:'',from:'',about:'',photo:'',places:[],contactType:'Instagram',contactVal:'',acceptPlace:'',reason:'',replyNote:''});
+    document.querySelectorAll('#modeSeg button').forEach((b,i)=>b.classList.toggle('on',i===0));
+    ['toName','msg','fromName','aboutMe','contactVal','reasonNote','replyNote'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+    const pp=document.getElementById('photoPrev');pp.classList.remove('has');pp.style.backgroundImage='';
+    pc.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));sendBtn.disabled=true;applyBuildCopy();go('home');}
+
+  const EGGS=['hej ćao 👋','uh, baš si uporan','20 klikova, ko broji 👀','polako, srce sam',
+    'kuc kuc, ima li koga?','škakljaš me 😄','pozovi nekog već','stani, zaljubiću se',
+    'još malo pa na kafu','ti bi mene na dejt? 💘'];
+  let heartTaps=0,eggTimer,lastEgg=-1;
+  function tapHeart(){
+    heartTaps++;
+    const h=document.getElementById('homeHeart');
+    h.animate([{transform:'scale(.84)'},{transform:'scale(1)'}],{duration:230,easing:'cubic-bezier(.2,1.6,.4,1)'});
+    if(heartTaps>=20){
+      let i;do{i=Math.floor(Math.random()*EGGS.length)}while(i===lastEgg&&EGGS.length>1);lastEgg=i;
+      const egg=document.getElementById('egg');egg.textContent=EGGS[i];
+      egg.classList.remove('show');void egg.offsetWidth;egg.classList.add('show');
+      clearTimeout(eggTimer);
+      eggTimer=setTimeout(()=>egg.classList.remove('show'),2800);
+      heartTaps=0;
+    }
+  }
+
+  const order=['home','build','sent','receive','reveal','accept','reject','result'];
+  function jump(){const cur=document.querySelector('.screen.on').id.replace('s-','');go(order[(order.indexOf(cur)+1)%order.length]);}
+</script>
+</body>
+</html>

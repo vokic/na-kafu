@@ -1,0 +1,16 @@
+{
+  "name": "na kafu?",
+  "short_name": "na kafu?",
+  "description": "Pozovi nekoga, bez treme.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF5EB",
+  "theme_color": "#FAF5EB",
+  "lang": "sr",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
