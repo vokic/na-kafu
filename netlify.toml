@@ -1,0 +1,9 @@
+# Netlify config. Netlify auto-detects Next.js (App Router) and applies its
+# Next.js Runtime (SSR for /p/[token] and /m/[token]). We only pin the build
+# command and Node version so builds are deterministic.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
