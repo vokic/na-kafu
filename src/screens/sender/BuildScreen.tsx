@@ -53,6 +53,8 @@ export default function BuildScreen({
         </button>
       </div>
 
+      <div className="hintbar" dangerouslySetInnerHTML={{ __html: c.hint }} />
+
       <h1 className="sm">
         {SR.build.heading.l1} <span className="offset">{SR.build.heading.l2}</span>
       </h1>
@@ -153,7 +155,6 @@ export default function BuildScreen({
           </div>
         </div>
 
-        <div className="hintbar" dangerouslySetInnerHTML={{ __html: c.hint }} />
       </div>
 
       <div className="btn-row">

@@ -16,7 +16,7 @@ import type {
 } from '@/lib/types';
 import { InviteStore, StoreError } from './InviteStore';
 import { KEYS, readJSON, writeJSON } from './persistence';
-import { generateId, generateToken } from './tokens';
+import { generateId, generateShortToken, generateToken } from './tokens';
 import { buildManageUrl, buildShareUrl } from './urls';
 
 function now(): string {
@@ -25,7 +25,16 @@ function now(): string {
 
 export class LocalInviteStore implements InviteStore {
   private loadInvite(inviteToken: string): Invite | null {
-    return readJSON<Invite>(KEYS.invite(inviteToken));
+    // Short tokens are lowercase (e.g. kqmxzp) → accept any case the user typed.
+    return readJSON<Invite>(KEYS.invite(inviteToken.toLowerCase()));
+  }
+
+  private uniqueInviteToken(): string {
+    for (let i = 0; i < 50; i++) {
+      const t = generateShortToken();
+      if (!readJSON(KEYS.invite(t))) return t;
+    }
+    return generateShortToken();
   }
 
   private saveInvite(invite: Invite): void {
@@ -58,8 +67,8 @@ export class LocalInviteStore implements InviteStore {
       throw new StoreError('INVALID', 'Nedostaju obavezna polja.');
     }
 
-    const inviteToken = generateToken();
-    const manageToken = generateToken();
+    const inviteToken = this.uniqueInviteToken(); // short public token: ADW-198
+    const manageToken = generateToken(); // long private token (bearer credential)
     const invite: Invite = {
       id: generateId(),
       invite_token: inviteToken,
@@ -98,6 +107,7 @@ export class LocalInviteStore implements InviteStore {
   }
 
   async getInvite(inviteToken: string): Promise<RecipientView> {
+    inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
 
@@ -131,6 +141,7 @@ export class LocalInviteStore implements InviteStore {
   }
 
   async reveal(inviteToken: string): Promise<RevealResult> {
+    inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
     if (invite.mode !== 'friend') throw new StoreError('INVALID', 'Otkrivanje važi samo za "preko druga".');
@@ -148,6 +159,7 @@ export class LocalInviteStore implements InviteStore {
   }
 
   async respond(inviteToken: string, payload: RespondPayload): Promise<void> {
+    inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
 

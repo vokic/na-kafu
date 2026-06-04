@@ -129,7 +129,7 @@ h1{font-weight:800;font-size:50px;line-height:.92;letter-spacing:-2px}
 h1.sm{font-size:40px}
 .offset{display:inline-block;color:var(--accent);margin-left:.5em}
 .lead{color:var(--muted);font-size:15px;line-height:1.5;margin-top:16px;font-weight:500}
-.label{font-weight:700;font-size:12px;margin:18px 0 8px;display:block;text-transform:uppercase;letter-spacing:.4px}
+.label{font-weight:700;font-size:12px;margin:22px 0 8px;display:block;text-transform:uppercase;letter-spacing:.4px}
 .label small{text-transform:none;letter-spacing:0;color:var(--muted);font-weight:500}
 
 .smoosh{width:142px;height:130px;-webkit-mask:var(--heart-mask) center/100% 100% no-repeat;mask:var(--heart-mask) center/100% 100% no-repeat;background:var(--block);
@@ -226,8 +226,10 @@ input:focus,textarea:focus{border-color:var(--fg)}
    Cross-device normalization (looks the same on iOS Safari / Chrome / Samsung)
    ========================================================================= */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;color-scheme:light dark}
-body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overscroll-behavior:none}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea,button,select{-webkit-appearance:none;appearance:none}
+input,textarea{-webkit-user-select:text;user-select:text}
 /* keep custom focus ring intent; remove iOS inner shadow on inputs */
 input[type=text],textarea{-webkit-appearance:none;appearance:none;border-radius:999px}
 textarea{border-radius:22px}
@@ -247,6 +249,9 @@ img{max-width:100%;display:block}
     padding-left:calc(20px + env(safe-area-inset-left));
     padding-right:calc(20px + env(safe-area-inset-right))}
   .holobg,.aurorabg,.holobg .mesh{border-radius:0}
+  /* lite mode: drop the heavy SVG liquid-displacement filter on phones (keeps soft gradients) → smooth */
+  .holobg .mesh{filter:blur(11px)}
+  .aurorabg .amesh{filter:blur(34px)}
 }
 
 @media (prefers-reduced-motion:reduce){

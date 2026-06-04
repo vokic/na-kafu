@@ -50,9 +50,18 @@ export default function SentScreen({
           style={{ maxWidth: '31ch' }}
           dangerouslySetInnerHTML={{ __html: interpolate(c.sentLead, { ime: recipientName }) }}
         />
-        <div className="link-box" style={{ marginTop: 22 }}>
-          <span>{display}</span>
-          <button className="copy" onClick={copy}>
+        <div style={{ marginTop: 22 }}>
+          <div
+            className="link-box"
+            style={{ display: 'block', textAlign: 'center', borderRadius: 16, padding: '14px 18px', wordBreak: 'break-all' }}
+          >
+            {display}
+          </div>
+          <button
+            className="copy"
+            onClick={copy}
+            style={{ width: '100%', marginTop: 10, padding: '15px', borderRadius: 999, fontSize: 15 }}
+          >
             {copied ? SR.sent.copied : SR.sent.copy}
           </button>
         </div>
