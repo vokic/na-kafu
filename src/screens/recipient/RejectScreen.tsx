@@ -28,7 +28,7 @@ export default function RejectScreen({
       </h1>
       <p className="lead">{SR.reject.lead}</p>
 
-      <div className="stagger" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginTop: 4 }}>
+      <div className="stagger" style={{ marginTop: 4 }}>
         <div>
           <label className="label">{SR.reject.reasonLabel}</label>
           <div className="chips">
