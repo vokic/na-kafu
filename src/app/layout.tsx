@@ -18,19 +18,38 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+const SITE_NAME = 'na kafu?';
+const SITE_DESC = 'Pozovi nekoga, bez treme. Pošalji pozivnicu na izlazak - sam, ili diskretno preko zajedničkog druga.';
+const SITE_URL = process.env.NEXT_PUBLIC_APP_BASE_URL || 'https://na-kafu.netlify.app';
+
 export const metadata: Metadata = {
-  title: 'na kafu?',
-  description: 'Pozovi nekoga, bez treme. Pošalji pozivnicu na izlazak - sam, ili diskretno preko zajedničkog druga.',
-  applicationName: 'na kafu?',
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESC,
+  applicationName: SITE_NAME,
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'na kafu?',
+    title: SITE_NAME,
   },
   icons: {
     icon: '/icon.svg',
     apple: '/icon.svg',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'sr_RS',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESC,
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_NAME,
+    description: SITE_DESC,
+    images: ['/og.png'],
   },
 };
 
