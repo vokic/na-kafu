@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { PlaneIcon } from '@/components/hearts';
+import AppRating from '@/components/AppRating';
 import { SR, COPY, interpolate } from '@/lib/i18n';
 import type { Mode } from '@/lib/types';
 
@@ -65,6 +66,7 @@ export default function SentScreen({
             {copied ? SR.sent.copied : SR.sent.copy}
           </button>
         </div>
+        <AppRating context="sender" />
       </div>
       <div className="btn-row">
         <button className="btn btn-primary" onClick={onPreview}>

@@ -31,4 +31,5 @@ export const KEYS = {
   events: (t: string) => `nakafu:events:${t}`,
   index: 'nakafu:index',
   last: 'nakafu:last',
+  ratings: 'nakafu:ratings',
 };

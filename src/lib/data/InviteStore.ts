@@ -36,4 +36,7 @@ export interface InviteStore {
 
   /** Sender view: invite + response + events timeline. */
   getManage(manageToken: string): Promise<ManageView>;
+
+  /** App feedback (thumbs up/down). `context` notes where it came from (e.g. 'recipient'/'sender'). */
+  submitRating(value: 'up' | 'down', context?: string): Promise<void>;
 }

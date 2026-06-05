@@ -211,4 +211,10 @@ export class LocalInviteStore implements InviteStore {
 
     return { invite, response, events };
   }
+
+  async submitRating(value: 'up' | 'down', context?: string): Promise<void> {
+    const list = readJSON<{ value: string; context?: string; at: string }[]>(KEYS.ratings) ?? [];
+    list.push({ value, context, at: now() });
+    writeJSON(KEYS.ratings, list);
+  }
 }

@@ -15,12 +15,14 @@ export default function ResultScreen({
   title,
   rows,
   note,
+  rating,
   footer,
 }: {
   accepted: boolean;
   title: string;
   rows: ResultRow[];
   note?: string | null;
+  rating?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
   return (
@@ -60,6 +62,7 @@ export default function ResultScreen({
             {note}
           </div>
         )}
+        {rating}
       </div>
       {footer && <div className="btn-row">{footer}</div>}
     </section>

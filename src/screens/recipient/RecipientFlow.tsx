@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import InfoScreen from '@/components/InfoScreen';
 import ResultScreen, { type ResultRow } from '@/components/ResultScreen';
+import AppRating from '@/components/AppRating';
 import { useTheme } from '@/state/ThemeProvider';
 import { store } from '@/lib/data';
 import { SR } from '@/lib/i18n';
@@ -48,6 +49,18 @@ export default function RecipientFlow({ token }: { token: string }) {
       active = false;
     };
   }, [token, setTheme]);
+
+  // Mandatory response: warn if the recipient tries to leave before choosing yes/no.
+  useEffect(() => {
+    const mustAnswer = step === 'receive' || step === 'reveal' || step === 'accept' || step === 'reject';
+    if (!mustAnswer) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [step]);
 
   const goReveal = useCallback(async () => {
     setBusy(true);
@@ -149,6 +162,7 @@ export default function RecipientFlow({ token }: { token: string }) {
           title={outcome.accepted ? SR.recipientResult.acceptTitle : SR.recipientResult.declineTitle}
           rows={outcome.rows}
           note={outcome.accepted ? SR.recipientResult.acceptNote : SR.recipientResult.declineNote}
+          rating={<AppRating context="recipient" />}
           footer={ownCta}
         />
       )}

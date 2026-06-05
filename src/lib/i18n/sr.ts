@@ -89,6 +89,11 @@ export const SR = {
   },
 
   // Recipient-side confirmation (prod: recipient sees a confirmation, not the sender's result)
+  rating: {
+    question: 'Kako ti je „na kafu?"',
+    thanks: 'Hvala na oceni!',
+  },
+
   recipientResult: {
     acceptTitle: 'Poslato!',
     declineTitle: 'Poslato.',
