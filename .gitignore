@@ -19,8 +19,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# env files
-.env*.local
+# env files (never commit secrets) — allow only a non-secret .env.example
+.env
+.env.*
+!.env.example
 
 # typescript
 *.tsbuildinfo
