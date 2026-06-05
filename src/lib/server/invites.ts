@@ -18,6 +18,12 @@ import type {
 
 const nowIso = () => new Date().toISOString();
 
+function ensureNotExpired(invite: Invite): void {
+  if (invite.expires_at && new Date(invite.expires_at).getTime() < Date.now()) {
+    throw new ApiError('EXPIRED', 'Pozivnica je istekla.');
+  }
+}
+
 async function logEvent(inviteId: string, type: string, meta: Record<string, unknown> | null = null) {
   await supabaseAdmin().from('events').insert({ invite_id: inviteId, type, meta });
 }
@@ -86,6 +92,7 @@ export async function getInvite(token: string): Promise<RecipientView> {
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
+  ensureNotExpired(invite);
 
   if (invite.status === 'pending') {
     await sb.from('invites').update({ status: 'opened', opened_at: nowIso() }).eq('id', invite.id);
@@ -121,6 +128,7 @@ export async function reveal(token: string): Promise<RevealResult> {
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
+  ensureNotExpired(invite);
   if (invite.mode !== 'friend') throw new ApiError('INVALID', 'Otkrivanje važi samo za "preko druga".');
   if (!invite.revealed_at) {
     await sb.from('invites').update({ revealed_at: nowIso() }).eq('id', invite.id);
@@ -135,6 +143,7 @@ export async function respond(token: string, payload: RespondPayload, baseUrl: s
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
+  ensureNotExpired(invite);
 
   if (payload.decision === 'accepted' && !payload.place) throw new ApiError('INVALID', 'Izaberi mesto.');
   if (payload.decision === 'declined' && !payload.reason) throw new ApiError('INVALID', 'Razlog je obavezan.');

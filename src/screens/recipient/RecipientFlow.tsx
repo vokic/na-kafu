@@ -4,10 +4,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import InfoScreen from '@/components/InfoScreen';
+import LoadingScreen from '@/components/LoadingScreen';
 import ResultScreen, { type ResultRow } from '@/components/ResultScreen';
 import AppRating from '@/components/AppRating';
 import { useTheme } from '@/state/ThemeProvider';
-import { store } from '@/lib/data';
+import { store, StoreError } from '@/lib/data';
 import { SR } from '@/lib/i18n';
 import type { RecipientView, RevealResult } from '@/lib/types';
 import ReceiveScreen from './ReceiveScreen';
@@ -15,7 +16,7 @@ import RevealScreen from './RevealScreen';
 import AcceptScreen, { type AcceptPayload } from './AcceptScreen';
 import RejectScreen, { type RejectPayload } from './RejectScreen';
 
-type Step = 'loading' | 'notfound' | 'closed' | 'receive' | 'reveal' | 'accept' | 'reject' | 'result';
+type Step = 'loading' | 'notfound' | 'expired' | 'closed' | 'receive' | 'reveal' | 'accept' | 'reject' | 'result';
 
 interface Outcome {
   accepted: boolean;
@@ -42,8 +43,9 @@ export default function RecipientFlow({ token }: { token: string }) {
         setTheme(v.theme);
         setStep(v.already_responded ? 'closed' : 'receive');
       })
-      .catch(() => {
-        if (active) setStep('notfound');
+      .catch((err) => {
+        if (!active) return;
+        setStep(err instanceof StoreError && err.code === 'EXPIRED' ? 'expired' : 'notfound');
       });
     return () => {
       active = false;
@@ -114,13 +116,21 @@ export default function RecipientFlow({ token }: { token: string }) {
 
   return (
     <PhoneShell showThemeSwitcher={false} onDevFill={() => setFillSignal((s) => s + 1)}>
-      {step === 'loading' && <InfoScreen key="loading" title={SR.loading} />}
+      {step === 'loading' && <LoadingScreen key="loading" />}
       {step === 'notfound' && (
         <InfoScreen
           key="notfound"
           title={SR.notFound.title}
           sub={SR.notFound.sub}
           cta={{ label: SR.notFound.cta, onClick: () => router.push('/') }}
+        />
+      )}
+      {step === 'expired' && (
+        <InfoScreen
+          key="expired"
+          title={SR.expired.title}
+          sub={SR.expired.sub}
+          cta={{ label: SR.expired.cta, onClick: () => router.push('/') }}
         />
       )}
       {step === 'closed' && (

@@ -37,6 +37,10 @@ export class LocalInviteStore implements InviteStore {
     return generateShortToken();
   }
 
+  private expired(invite: Invite): boolean {
+    return !!invite.expires_at && new Date(invite.expires_at).getTime() < Date.now();
+  }
+
   private saveInvite(invite: Invite): void {
     writeJSON(KEYS.invite(invite.invite_token), invite);
   }
@@ -85,6 +89,7 @@ export class LocalInviteStore implements InviteStore {
       status: 'pending',
       user_id: null,
       created_at: now(),
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       opened_at: null,
       responded_at: null,
       revealed_at: null,
@@ -110,6 +115,7 @@ export class LocalInviteStore implements InviteStore {
     inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
+    if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
 
     // First open
     if (invite.status === 'pending') {
@@ -144,6 +150,7 @@ export class LocalInviteStore implements InviteStore {
     inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
+    if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
     if (invite.mode !== 'friend') throw new StoreError('INVALID', 'Otkrivanje važi samo za "preko druga".');
 
     if (!invite.revealed_at) {
@@ -162,6 +169,7 @@ export class LocalInviteStore implements InviteStore {
     inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
+    if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
 
     const existing = readJSON<InviteResponse>(KEYS.response(inviteToken));
     if (existing) throw new StoreError('ALREADY_RESPONDED', 'Već je odgovoreno.');
@@ -212,9 +220,9 @@ export class LocalInviteStore implements InviteStore {
     return { invite, response, events };
   }
 
-  async submitRating(value: 'up' | 'down', context?: string): Promise<void> {
-    const list = readJSON<{ value: string; context?: string; at: string }[]>(KEYS.ratings) ?? [];
-    list.push({ value, context, at: now() });
+  async submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void> {
+    const list = readJSON<{ value: string; comment: string | null; context?: string; at: string }[]>(KEYS.ratings) ?? [];
+    list.push({ value, comment: comment?.trim() || null, context, at: now() });
     writeJSON(KEYS.ratings, list);
   }
 }

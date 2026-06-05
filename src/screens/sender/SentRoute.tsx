@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import InfoScreen from '@/components/InfoScreen';
+import LoadingScreen from '@/components/LoadingScreen';
 import SentScreen from '@/screens/sender/SentScreen';
 import { useTheme } from '@/state/ThemeProvider';
 import { KEYS, readJSON } from '@/lib/data/persistence';
@@ -47,7 +48,7 @@ export default function SentRoute() {
   if (state === 'loading') {
     return (
       <PhoneShell showThemeSwitcher={false}>
-        <InfoScreen title={SR.loading} />
+        <LoadingScreen />
       </PhoneShell>
     );
   }

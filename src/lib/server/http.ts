@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 
 // Maps to StoreErrorCode on the client.
-export type ApiErrorCode = 'NOT_FOUND' | 'ALREADY_RESPONDED' | 'INVALID' | 'CONFLICT' | 'SERVER';
+export type ApiErrorCode = 'NOT_FOUND' | 'ALREADY_RESPONDED' | 'INVALID' | 'CONFLICT' | 'EXPIRED' | 'SERVER';
 
 const STATUS: Record<ApiErrorCode, number> = {
   INVALID: 400,
   NOT_FOUND: 404,
   ALREADY_RESPONDED: 409,
   CONFLICT: 409,
+  EXPIRED: 410,
   SERVER: 500,
 };
 

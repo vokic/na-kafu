@@ -11,7 +11,7 @@ import type {
   RevealResult,
 } from '@/lib/types';
 
-export type StoreErrorCode = 'NOT_FOUND' | 'ALREADY_RESPONDED' | 'INVALID' | 'CONFLICT';
+export type StoreErrorCode = 'NOT_FOUND' | 'ALREADY_RESPONDED' | 'INVALID' | 'CONFLICT' | 'EXPIRED';
 
 export class StoreError extends Error {
   code: StoreErrorCode;
@@ -37,6 +37,6 @@ export interface InviteStore {
   /** Sender view: invite + response + events timeline. */
   getManage(manageToken: string): Promise<ManageView>;
 
-  /** App feedback (thumbs up/down). `context` notes where it came from (e.g. 'recipient'/'sender'). */
-  submitRating(value: 'up' | 'down', context?: string): Promise<void>;
+  /** App feedback: thumbs up/down + optional short comment. `context` = where it came from. */
+  submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void>;
 }

@@ -68,6 +68,9 @@ export default function BuildScreen({
         <div>
           <label className="label">{SR.build.fields.message}</label>
           <textarea value={draft.msg} onChange={(e) => onChange({ msg: e.target.value })} />
+          <div className="about" style={{ margin: '8px 2px 0' }}>
+            {SR.build.messageHint}
+          </div>
         </div>
 
         <div>

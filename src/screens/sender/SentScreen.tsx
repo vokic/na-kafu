@@ -66,6 +66,9 @@ export default function SentScreen({
             {copied ? SR.sent.copied : SR.sent.copy}
           </button>
         </div>
+        <div className="note" style={{ display: 'block' }}>
+          {SR.sent.expiryInfo}
+        </div>
         <AppRating context="sender" />
       </div>
       <div className="btn-row">

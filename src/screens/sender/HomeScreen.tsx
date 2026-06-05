@@ -62,11 +62,6 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
         <p className="lead" style={{ maxWidth: '30ch' }}>
           {SR.home.sub}
         </p>
-        <div className="dots">
-          <i />
-          <i className="on" />
-          <i />
-        </div>
       </div>
       <div className="btn-row">
         <button className="btn btn-primary" onClick={onStart}>

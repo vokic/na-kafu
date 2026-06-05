@@ -21,12 +21,14 @@ function Thumb({ down }: { down?: boolean }) {
 }
 
 export default function AppRating({ context }: { context?: string }) {
-  const [done, setDone] = useState<null | 'up' | 'down'>(null);
+  const [value, setValue] = useState<'up' | 'down' | null>(null);
+  const [comment, setComment] = useState('');
+  const [done, setDone] = useState(false);
 
-  function rate(value: 'up' | 'down') {
-    if (done) return;
-    setDone(value);
-    store.submitRating(value, context).catch(() => {});
+  function send() {
+    if (!value || done) return;
+    setDone(true);
+    store.submitRating(value, comment.trim() || undefined, context).catch(() => {});
   }
 
   if (done) {
@@ -43,13 +45,40 @@ export default function AppRating({ context }: { context?: string }) {
         {SR.rating.question}
       </div>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 10 }}>
-        <button className="chip" type="button" aria-label="dobro" onClick={() => rate('up')} style={{ padding: '9px 18px' }}>
+        <button
+          className={`chip${value === 'up' ? ' sel' : ''}`}
+          type="button"
+          aria-label="dobro"
+          onClick={() => setValue('up')}
+          style={{ padding: '9px 18px' }}
+        >
           <Thumb />
         </button>
-        <button className="chip" type="button" aria-label="loše" onClick={() => rate('down')} style={{ padding: '9px 18px' }}>
+        <button
+          className={`chip${value === 'down' ? ' sel' : ''}`}
+          type="button"
+          aria-label="loše"
+          onClick={() => setValue('down')}
+          style={{ padding: '9px 18px' }}
+        >
           <Thumb down />
         </button>
       </div>
+
+      {value && (
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <input
+            type="text"
+            value={comment}
+            maxLength={200}
+            placeholder={SR.rating.commentPlaceholder}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button className="btn btn-primary" type="button" style={{ padding: '13px' }} onClick={send}>
+            {SR.rating.send}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -21,6 +21,7 @@ create table if not exists invites (
                       check (status in ('pending','opened','accepted','declined')),
   user_id           uuid,                            -- null in MVP (Phase 2 accounts)
   created_at        timestamptz default now(),
+  expires_at        timestamptz not null default (now() + interval '24 hours'),  -- link valid 24h
   opened_at         timestamptz,
   responded_at      timestamptz,
   revealed_at       timestamptz
@@ -50,6 +51,14 @@ create table if not exists events (
   created_at timestamptz default now()
 );
 
+create table if not exists feedback (
+  id         uuid primary key default gen_random_uuid(),
+  value      text check (value in ('up','down')),
+  comment    text,
+  context    text,                                   -- 'recipient' | 'sender'
+  created_at timestamptz default now()
+);
+
 create index if not exists invites_invite_token_idx on invites(invite_token);
 create index if not exists invites_manage_token_idx on invites(manage_token);
 create index if not exists responses_invite_id_idx on responses(invite_id);
@@ -59,6 +68,7 @@ create index if not exists events_invite_id_idx on events(invite_id);
 alter table invites   enable row level security;
 alter table responses enable row level security;
 alter table events    enable row level security;
+alter table feedback  enable row level security;
 
 -- Grant table access to service_role ONLY (our server). Needed because "Automatically
 -- expose new tables" is OFF, so no grants are applied automatically. anon/authenticated

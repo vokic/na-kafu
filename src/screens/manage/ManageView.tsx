@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import InfoScreen from '@/components/InfoScreen';
+import LoadingScreen from '@/components/LoadingScreen';
 import { CheckIcon, EnvelopeIcon, RainIcon } from '@/components/hearts';
 import { useTheme } from '@/state/ThemeProvider';
 import { store } from '@/lib/data';
@@ -51,7 +52,7 @@ export default function ManageView({ token }: { token: string }) {
   if (state === 'loading') {
     return (
       <PhoneShell showThemeSwitcher={false}>
-        <InfoScreen title={SR.loading} />
+        <LoadingScreen />
       </PhoneShell>
     );
   }

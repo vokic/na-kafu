@@ -12,12 +12,12 @@ import { InviteStore, StoreError, type StoreErrorCode } from './InviteStore';
 
 async function handle<T>(res: Response): Promise<T> {
   if (res.ok) return (await res.json()) as T;
-  let code: StoreErrorCode = res.status === 404 ? 'NOT_FOUND' : 'INVALID';
+  let code: StoreErrorCode = res.status === 404 ? 'NOT_FOUND' : res.status === 410 ? 'EXPIRED' : 'INVALID';
   let message = 'Greška na serveru.';
   try {
     const body = await res.json();
     if (body?.error) message = body.error;
-    if (['NOT_FOUND', 'ALREADY_RESPONDED', 'INVALID', 'CONFLICT'].includes(body?.code)) {
+    if (['NOT_FOUND', 'ALREADY_RESPONDED', 'INVALID', 'CONFLICT', 'EXPIRED'].includes(body?.code)) {
       code = body.code as StoreErrorCode;
     }
   } catch {
@@ -60,7 +60,16 @@ export class ApiInviteStore implements InviteStore {
     return handle(res);
   }
 
-  async submitRating(): Promise<void> {
-    // App ratings will flow to PostHog later; no-op in API mode for now.
+  async submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void> {
+    // Best-effort — feedback must never break the UX.
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ value, comment, context }),
+      });
+    } catch {
+      /* ignore */
+    }
   }
 }

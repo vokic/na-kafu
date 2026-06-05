@@ -37,6 +37,7 @@ export interface Invite {
   status: InviteStatus;
   user_id: string | null;         // null in MVP
   created_at: string;             // ISO 8601
+  expires_at: string;             // ISO 8601 — link/photo valid until this (24h)
   opened_at: string | null;
   responded_at: string | null;
   revealed_at: string | null;

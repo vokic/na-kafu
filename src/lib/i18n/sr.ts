@@ -28,6 +28,8 @@ export const SR = {
       opt: 'opciono',
     },
     aboutPlaceholder: 'Par reči o tebi - šta voliš, čime se baviš.',
+    messageHint:
+      'Ovo najviše utiče na ishod - budi svoj, duhovit i iskren. Kulturno, naravno; nepristojno ponašanje se trajno blokira, bez izuzetka.',
     addPhoto: '+ Dodaj sliku',
     back: 'Nazad',
   },
@@ -38,6 +40,8 @@ export const SR = {
     copied: 'Kopirano',
     preview: 'Pogledaj iz njene perspektive',
     newOne: 'Napravi novu',
+    expiryInfo:
+      'Pozivnica važi do sutra u ovo vreme. Ako je tvoja simpatija ne otvori, više neće biti validna i moraćeš da napraviš novu.',
   },
 
   recv: {
@@ -90,7 +94,9 @@ export const SR = {
 
   // Recipient-side confirmation (prod: recipient sees a confirmation, not the sender's result)
   rating: {
-    question: 'Kako ti je „na kafu?"',
+    question: 'Kako ti se dopada ovaj servis?',
+    commentPlaceholder: 'Kratak komentar (opciono)…',
+    send: 'Pošalji',
     thanks: 'Hvala na oceni!',
   },
 
@@ -135,13 +141,19 @@ export const SR = {
     cta: 'Napravi svoju pozivnicu',
   },
 
+  expired: {
+    title: 'Pozivnica je istekla.',
+    sub: 'Neko je pokušao da stupi u kontakt sa tobom, ali nije uspeo. Možda će skupiti hrabrost da to uradi ponovo.',
+    cta: 'Napravi svoju pozivnicu',
+  },
+
   alreadyResponded: {
     title: 'Već je odgovoreno.',
     sub: 'Na ovu pozivnicu je već dat odgovor.',
     cta: 'I ti pozovi nekoga',
   },
 
-  loading: 'Učitavanje…',
+  loading: 'Učitavanje',
 
   reasons: [
     'Već sam zauzet/a',
