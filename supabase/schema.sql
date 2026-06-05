@@ -59,3 +59,12 @@ create index if not exists events_invite_id_idx on events(invite_id);
 alter table invites   enable row level security;
 alter table responses enable row level security;
 alter table events    enable row level security;
+
+-- Grant table access to service_role ONLY (our server). Needed because "Automatically
+-- expose new tables" is OFF, so no grants are applied automatically. anon/authenticated
+-- get nothing → only our backend (service-role key) can touch the data. RLS stays on.
+grant usage on schema public to service_role;
+grant all privileges on all tables in schema public to service_role;
+grant all privileges on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
