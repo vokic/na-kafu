@@ -2,19 +2,19 @@ import type { Metadata } from 'next';
 import LegalPage from '@/screens/legal/LegalPage';
 
 export const metadata: Metadata = {
-  title: 'Privatnost — na kafu?',
+  title: 'Privatnost - na kafu?',
 };
 
-// NACRT — pravni tekst proveriti pre lansiranja (Srbija ZZPL + GDPR, HANDOVER §9).
+// NACRT - pravni tekst proveriti pre lansiranja (Srbija ZZPL + GDPR, HANDOVER §9).
 export default function PrivacyPage() {
   return (
     <LegalPage title="Politika privatnosti">
       <p>
-        <em>Nacrt — finalni tekst potvrditi pre objave.</em>
+        <em>Nacrt - finalni tekst potvrditi pre objave.</em>
       </p>
       <h2 style={{ fontSize: 18, marginTop: 24 }}>Šta čuvamo</h2>
       <p>
-        Email pošiljaoca (uvek), tekst pozivnice, izabrana mesta, potpis i — opciono — fotografiju i par reči o sebi.
+        Email pošiljaoca (uvek), tekst pozivnice, izabrana mesta, potpis i - opciono - fotografiju i par reči o sebi.
         Primalac ne pravi nalog; ako želi, ostavlja kontakt dobrovoljno.
       </p>
       <h2 style={{ fontSize: 18, marginTop: 24 }}>Zašto</h2>

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SR } from '@/lib/i18n';
-import { isDev } from '@/lib/devFlag';
+import { SAMPLE_CONTACT, SAMPLE_REPLY } from '@/lib/devSamples';
 import type { ContactType } from '@/lib/types';
 
 const CONTACTS: ContactType[] = ['Instagram', 'Telefon', 'Email', 'Snapchat'];
@@ -19,16 +19,28 @@ export default function AcceptScreen({
   onSubmit,
   onBack,
   busy,
+  fillSignal = 0,
 }: {
   places: string[];
   onSubmit: (p: AcceptPayload) => void;
   onBack: () => void;
   busy: boolean;
+  fillSignal?: number;
 }) {
   const [place, setPlace] = useState('');
   const [contactType, setContactType] = useState<ContactType>('Instagram');
   const [contactVal, setContactVal] = useState('');
   const [reply, setReply] = useState('');
+
+  // ⚡ dev-fill (triggered from the shell button via an incrementing signal)
+  useEffect(() => {
+    if (!fillSignal) return;
+    setPlace(places[0] ?? '');
+    setContactType('Instagram');
+    setContactVal(SAMPLE_CONTACT);
+    setReply(SAMPLE_REPLY);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fillSignal]);
 
   return (
     <section className="screen on">
@@ -93,22 +105,6 @@ export default function AcceptScreen({
           {SR.accept.back}
         </button>
       </div>
-
-      {isDev && (
-        <button
-          className="fillbtn"
-          type="button"
-          title="dev: popuni odgovor"
-          onClick={() => {
-            setPlace(places[0] ?? '');
-            setContactType('Instagram');
-            setContactVal('@mila_ns');
-            setReply('Hahah važi, ali ti častiš prvu!');
-          }}
-        >
-          ⚡
-        </button>
-      )}
     </section>
   );
 }

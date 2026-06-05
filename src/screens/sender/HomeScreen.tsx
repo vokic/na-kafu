@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { EnvelopeIcon } from '@/components/hearts';
 import { SR } from '@/lib/i18n';
 
@@ -12,6 +12,13 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [eggText, setEggText] = useState<string>(SR.eggs[0]);
   const [eggShow, setEggShow] = useState(false);
+  const [accentIdx, setAccentIdx] = useState(0);
+
+  // Rotate the accent line through SR.home.accents with a fade.
+  useEffect(() => {
+    const id = setInterval(() => setAccentIdx((i) => (i + 1) % SR.home.accents.length), 2400);
+    return () => clearInterval(id);
+  }, []);
 
   function tapHeart() {
     tapsRef.current += 1;
@@ -48,7 +55,9 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
           <br />
           nekoga,
           <br />
-          <span className="offset">bez treme.</span>
+          <span className="offset" key={accentIdx} style={{ animation: 'rise .5s cubic-bezier(.22,1,.32,1)' }}>
+            {SR.home.accents[accentIdx]}
+          </span>
         </h1>
         <p className="lead" style={{ maxWidth: '30ch' }}>
           {SR.home.sub}

@@ -5,7 +5,9 @@ export const SR = {
   brand: 'na kafu?',
 
   home: {
-    sub: 'Pošalji pozivnicu na izlazak — sam, ili diskretno preko zajedničkog druga.',
+    // Rotating accent line; each completes "Pozovi nekoga, ___"
+    accents: ['bez treme.', 'na kreativan način.', 'hrabro.', 'bez stresa.', 'iz prve.', 'lako.', 'danas.'],
+    sub: 'Pošalji pozivnicu na izlazak - sam, ili diskretno preko zajedničkog druga.',
     cta: 'Napravi pozivnicu',
   },
 
@@ -25,7 +27,7 @@ export const SR = {
       theme: 'Tema pozivnice',
       opt: 'opciono',
     },
-    aboutPlaceholder: 'Par reči o tebi — šta voliš, čime se baviš.',
+    aboutPlaceholder: 'Par reči o tebi - šta voliš, čime se baviš.',
     addPhoto: '+ Dodaj sliku',
     back: 'Nazad',
   },
@@ -81,8 +83,8 @@ export const SR = {
     declineTitle: 'Ovaj put ne.',
     acceptTitleSuffix: 'kaže da!', // "{ime} kaže da!"
     labels: { place: 'Mesto', contact: '', reason: 'Razlog', note: 'Poruka', herMessage: 'Njena poruka' },
-    friendHidden: 'Ostao si skriven — niko ne zna da si ti pitao.',
-    friendRevealedNoContact: 'Otkrila je ko si — javiće ti se, ili vas drug spoji.',
+    friendHidden: 'Ostao si skriven - niko ne zna da si ti pitao.',
+    friendRevealedNoContact: 'Otkrila je ko si - javiće ti se, ili vas drug spoji.',
     newInvite: 'Napravi novu pozivnicu',
   },
 

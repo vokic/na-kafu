@@ -20,7 +20,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: 'na kafu?',
-  description: 'Pozovi nekoga, bez treme. Pošalji pozivnicu na izlazak — sam, ili diskretno preko zajedničkog druga.',
+  description: 'Pozovi nekoga, bez treme. Pošalji pozivnicu na izlazak - sam, ili diskretno preko zajedničkog druga.',
   applicationName: 'na kafu?',
   manifest: '/manifest.webmanifest',
   appleWebApp: {

@@ -29,6 +29,7 @@ export default function RecipientFlow({ token }: { token: string }) {
   const [reveal, setReveal] = useState<RevealResult | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busy, setBusy] = useState(false);
+  const [fillSignal, setFillSignal] = useState(0); // ⚡ dev-fill trigger
 
   useEffect(() => {
     let active = true;
@@ -99,7 +100,7 @@ export default function RecipientFlow({ token }: { token: string }) {
   );
 
   return (
-    <PhoneShell showThemeSwitcher={false}>
+    <PhoneShell showThemeSwitcher={false} onDevFill={() => setFillSignal((s) => s + 1)}>
       {step === 'loading' && <InfoScreen key="loading" title={SR.loading} />}
       {step === 'notfound' && (
         <InfoScreen
@@ -135,10 +136,11 @@ export default function RecipientFlow({ token }: { token: string }) {
           onSubmit={submitAccept}
           onBack={() => setStep(view.mode === 'friend' ? 'reveal' : 'receive')}
           busy={busy}
+          fillSignal={fillSignal}
         />
       )}
       {step === 'reject' && (
-        <RejectScreen key="reject" onSubmit={submitReject} onBack={() => setStep('receive')} busy={busy} />
+        <RejectScreen key="reject" onSubmit={submitReject} onBack={() => setStep('receive')} busy={busy} fillSignal={fillSignal} />
       )}
       {step === 'result' && outcome && (
         <ResultScreen

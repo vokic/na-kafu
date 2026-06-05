@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SR } from '@/lib/i18n';
-import { isDev } from '@/lib/devFlag';
+import { SAMPLE_REASON_NOTE } from '@/lib/devSamples';
 
 export interface RejectPayload {
   reason: string;
@@ -13,13 +13,22 @@ export default function RejectScreen({
   onSubmit,
   onBack,
   busy,
+  fillSignal = 0,
 }: {
   onSubmit: (p: RejectPayload) => void;
   onBack: () => void;
   busy: boolean;
+  fillSignal?: number;
 }) {
   const [reason, setReason] = useState('');
   const [note, setNote] = useState('');
+
+  // ⚡ dev-fill (triggered from the shell button via an incrementing signal)
+  useEffect(() => {
+    if (!fillSignal) return;
+    setReason(SR.reasons[0]);
+    setNote(SAMPLE_REASON_NOTE);
+  }, [fillSignal]);
 
   return (
     <section className="screen on">
@@ -59,20 +68,6 @@ export default function RejectScreen({
           {SR.accept.back}
         </button>
       </div>
-
-      {isDev && (
-        <button
-          className="fillbtn"
-          type="button"
-          title="dev: popuni odgovor"
-          onClick={() => {
-            setReason(SR.reasons[0]);
-            setNote('Baš si drag, ali trenutno ne tražim ništa.');
-          }}
-        >
-          ⚡
-        </button>
-      )}
     </section>
   );
 }

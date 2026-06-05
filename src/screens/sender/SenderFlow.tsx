@@ -3,11 +3,12 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
-import DevFill from '@/components/DevFill';
 import { useTheme } from '@/state/ThemeProvider';
 import { store } from '@/lib/data';
 import { isDev } from '@/lib/devFlag';
+import { SR } from '@/lib/i18n';
 import { KEYS } from '@/lib/data/persistence';
+import { SAMPLE_PHOTO } from '@/lib/devSamples';
 import type { CreateInviteResult } from '@/lib/types';
 import HomeScreen from './HomeScreen';
 import BuildScreen from './BuildScreen';
@@ -70,12 +71,21 @@ export default function SenderFlow() {
     </button>
   ) : null;
 
+  // ⚡ dev-fill: fill the build fields (keep the currently selected mode).
+  const devFill = () =>
+    setDraft((d) => ({
+      ...d,
+      to: 'Mila',
+      msg: 'Video sam te na žurci kod Ane. Idemo na pravu kafu?',
+      from: 'Marko @marko_ns',
+      email: 'marko@mejl.com',
+      about: '30, volim planinarenje, špageti i loš stand-up.',
+      photo: SAMPLE_PHOTO,
+      places: SR.places.slice(0, 3),
+    }));
+
   return (
-    <PhoneShell
-      showThemeSwitcher
-      topRight={devDemo}
-      overlay={isDev && step === 'build' ? <DevFill onFill={setDraft} /> : null}
-    >
+    <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={devFill}>
       {step === 'home' && <HomeScreen key="home" onStart={() => setStep('build')} />}
       {step === 'build' && (
         <BuildScreen key="build" draft={draft} onChange={update} onBack={() => setStep('home')} onSubmit={submit} busy={busy} />
