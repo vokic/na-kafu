@@ -3,6 +3,7 @@
 import { useTheme } from '@/state/ThemeProvider';
 import { SR, COPY } from '@/lib/i18n';
 import type { ThemeName } from '@/lib/types';
+import { resizeImage } from '@/lib/image';
 import { isValidEmail, type Draft } from './draft';
 
 const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora'];
@@ -34,12 +35,16 @@ export default function BuildScreen({
     onChange({ places: has ? draft.places.filter((x) => x !== p) : [...draft.places, p] });
   }
 
-  function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+  async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    const r = new FileReader();
-    r.onload = (ev) => onChange({ photo: String(ev.target?.result ?? '') });
-    r.readAsDataURL(f);
+    try {
+      onChange({ photo: await resizeImage(f) }); // shrink + compress before upload
+    } catch {
+      const r = new FileReader(); // fallback: original
+      r.onload = (ev) => onChange({ photo: String(ev.target?.result ?? '') });
+      r.readAsDataURL(f);
+    }
   }
 
   return (

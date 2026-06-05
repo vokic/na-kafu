@@ -1,5 +1,6 @@
 'use client';
 
+import PhotoZoom from '@/components/PhotoZoom';
 import { SR } from '@/lib/i18n';
 import type { RevealResult } from '@/lib/types';
 
@@ -25,9 +26,7 @@ export default function RevealScreen({
           <span className="offset">{SR.reveal.heading.l2}</span>
         </h1>
         <div className="reveal-card">
-          {reveal.sender_photo_url && (
-            <div className="avatar has" style={{ backgroundImage: `url("${reveal.sender_photo_url}")` }} />
-          )}
+          {reveal.sender_photo_url && <PhotoZoom url={reveal.sender_photo_url} className="avatar has" />}
           <div className="who">{name}</div>
           <div className="handle">{handle}</div>
         </div>

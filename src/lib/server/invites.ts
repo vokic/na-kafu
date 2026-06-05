@@ -3,6 +3,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { generateShortToken, generateToken } from '@/lib/data/tokens';
 import { sendConfirmationEmail, sendNotificationEmail } from '@/lib/email/templates';
+import { uploadPhotoFromDataUrl } from './storage';
 import { ApiError } from './http';
 import type {
   CreateInvitePayload,
@@ -41,6 +42,12 @@ export async function createInvite(payload: CreateInvitePayload, baseUrl: string
   }
   if (payload.mode !== 'direct' && payload.mode !== 'friend') throw new ApiError('INVALID', 'Nepoznat mod.');
 
+  // Upload the photo to Storage (replaces the inline base64 with a public URL).
+  let photoUrl: string | null = payload.sender_photo_url || null;
+  if (photoUrl && photoUrl.startsWith('data:')) {
+    photoUrl = await uploadPhotoFromDataUrl(photoUrl);
+  }
+
   const sb = supabaseAdmin();
   let invite: Invite | null = null;
   for (let i = 0; i < 6; i++) {
@@ -53,7 +60,7 @@ export async function createInvite(payload: CreateInvitePayload, baseUrl: string
         sender_email: payload.sender_email.trim(),
         sender_signature: payload.sender_signature.trim(),
         sender_about: payload.sender_about?.trim() || null,
-        sender_photo_url: payload.sender_photo_url || null,
+        sender_photo_url: photoUrl,
         recipient_name: payload.recipient_name.trim(),
         message: payload.message.trim(),
         places,

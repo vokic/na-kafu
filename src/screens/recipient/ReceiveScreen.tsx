@@ -1,6 +1,7 @@
 'use client';
 
 import { EnvelopeIcon } from '@/components/hearts';
+import PhotoZoom from '@/components/PhotoZoom';
 import { SR, COPY } from '@/lib/i18n';
 import type { RecipientView } from '@/lib/types';
 
@@ -41,9 +42,7 @@ export default function ReceiveScreen({
             ?
           </div>
         )}
-        {showAvatar && (
-          <div className="avatar has" style={{ backgroundImage: `url("${view.sender_photo_url}")` }} />
-        )}
+        {showAvatar && view.sender_photo_url && <PhotoZoom url={view.sender_photo_url} className="avatar has" />}
         <div className="from" style={friend ? { textTransform: 'none' } : undefined}>
           {friend ? c.recvCardHeading : `Šalje · ${view.sender_signature ?? ''}`}
         </div>
