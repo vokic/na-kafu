@@ -8,6 +8,7 @@ import LoadingScreen from '@/components/LoadingScreen';
 import { CheckIcon, EnvelopeIcon, RainIcon } from '@/components/hearts';
 import { useTheme } from '@/state/ThemeProvider';
 import { store } from '@/lib/data';
+import { track } from '@/lib/analytics';
 import { SR } from '@/lib/i18n';
 import { buildShareUrl } from '@/lib/data/urls';
 import type { ManageView as ManageData } from '@/lib/types';
@@ -39,6 +40,7 @@ export default function ManageView({ token }: { token: string }) {
         if (!active) return;
         setData(d);
         setTheme(d.invite.theme);
+        track('manage_viewed', { status: d.invite.status });
         setState('ready');
       })
       .catch(() => {

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Schibsted_Grotesk, Poppins } from 'next/font/google';
+import AnalyticsProvider from '@/components/AnalyticsProvider';
 import './globals.css';
 
 // Self-hosted via next/font → identical glyphs across iOS/Android/Samsung.
@@ -65,7 +66,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sr" className={`${schibsted.variable} ${poppins.variable}`}>
-      <body>{children}</body>
+      <body>
+        <AnalyticsProvider />
+        {children}
+      </body>
     </html>
   );
 }

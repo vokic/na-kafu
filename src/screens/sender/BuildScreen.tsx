@@ -4,6 +4,7 @@ import { useTheme } from '@/state/ThemeProvider';
 import { SR, COPY } from '@/lib/i18n';
 import type { ThemeName } from '@/lib/types';
 import { resizeImage } from '@/lib/image';
+import { track } from '@/lib/analytics';
 import { isValidEmail, type Draft } from './draft';
 
 const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora'];
@@ -50,10 +51,24 @@ export default function BuildScreen({
   return (
     <section className="screen on">
       <div className="seg modeseg">
-        <button type="button" className={draft.mode === 'direct' ? 'on' : ''} onClick={() => onChange({ mode: 'direct' })}>
+        <button
+          type="button"
+          className={draft.mode === 'direct' ? 'on' : ''}
+          onClick={() => {
+            track('mode_selected', { mode: 'direct' });
+            onChange({ mode: 'direct' });
+          }}
+        >
           {SR.build.mode.direct}
         </button>
-        <button type="button" className={draft.mode === 'friend' ? 'on' : ''} onClick={() => onChange({ mode: 'friend' })}>
+        <button
+          type="button"
+          className={draft.mode === 'friend' ? 'on' : ''}
+          onClick={() => {
+            track('mode_selected', { mode: 'friend' });
+            onChange({ mode: 'friend' });
+          }}
+        >
           {SR.build.mode.friend}
         </button>
       </div>
@@ -157,7 +172,10 @@ export default function BuildScreen({
                 type="button"
                 className={`sw ${t}${theme === t ? ' on' : ''}`}
                 aria-label={t}
-                onClick={() => setTheme(t)}
+                onClick={() => {
+                  track('theme_changed', { theme: t, where: 'build' });
+                  setTheme(t);
+                }}
               />
             ))}
           </div>

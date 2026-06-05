@@ -4,7 +4,8 @@ import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import { useTheme } from '@/state/ThemeProvider';
-import { store } from '@/lib/data';
+import { store, StoreError } from '@/lib/data';
+import { track } from '@/lib/analytics';
 import { isDev } from '@/lib/devFlag';
 import { SR } from '@/lib/i18n';
 import { KEYS } from '@/lib/data/persistence';
@@ -29,6 +30,7 @@ export default function SenderFlow() {
 
   async function submit() {
     setBusy(true);
+    track('invite_create_attempted');
     try {
       const res = await store.createInvite({
         mode: draft.mode,
@@ -42,6 +44,15 @@ export default function SenderFlow() {
         theme,
       });
       setResult(res);
+      track('invite_created', {
+        mode: draft.mode,
+        theme,
+        places_count: draft.places.length,
+        has_photo: !!draft.photo,
+        has_about: !!draft.about.trim(),
+        message_len: draft.msg.trim().length,
+        invite_token: res.invite_token,
+      });
       // Persist last-created so /sent survives a refresh / deep-link.
       try {
         window.localStorage.setItem(
@@ -54,6 +65,7 @@ export default function SenderFlow() {
       setStep('sent');
     } catch (err) {
       console.error(err);
+      track('invite_create_failed', { code: err instanceof StoreError ? err.code : 'UNKNOWN' });
     } finally {
       setBusy(false);
     }

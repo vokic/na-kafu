@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { EnvelopeIcon } from '@/components/hearts';
 import { SR } from '@/lib/i18n';
+import { track } from '@/lib/analytics';
 
 // Easter egg: 20 taps on the home heart → random bubble (no immediate repeat). KEPT in prod.
 export default function HomeScreen({ onStart }: { onStart: () => void }) {
@@ -13,6 +14,10 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
   const [eggText, setEggText] = useState<string>(SR.eggs[0]);
   const [eggShow, setEggShow] = useState(false);
   const [accentIdx, setAccentIdx] = useState(0);
+
+  useEffect(() => {
+    track('home_viewed');
+  }, []);
 
   // Rotate the accent line through SR.home.accents with a fade.
   useEffect(() => {
@@ -34,6 +39,7 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
       lastEggRef.current = i;
       setEggText(SR.eggs[i]);
       setEggShow(false);
+      track('easter_egg_triggered');
       requestAnimationFrame(() => requestAnimationFrame(() => setEggShow(true)));
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setEggShow(false), 2800);
@@ -64,7 +70,13 @@ export default function HomeScreen({ onStart }: { onStart: () => void }) {
         </p>
       </div>
       <div className="btn-row">
-        <button className="btn btn-primary" onClick={onStart}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            track('create_started');
+            onStart();
+          }}
+        >
           {SR.home.cta}
         </button>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { track } from '@/lib/analytics';
 
 // Avatar (circle, via background-image) that opens a full-screen zoom on click.
 // Guards against the touch "ghost click": the opening tap can echo onto the lightbox
@@ -12,6 +13,7 @@ export default function PhotoZoom({ url, className }: { url: string; className?:
   function openZoom(e?: React.SyntheticEvent) {
     e?.stopPropagation();
     openedAt.current = Date.now();
+    track('photo_zoomed');
     setOpen(true);
   }
   function closeZoom() {

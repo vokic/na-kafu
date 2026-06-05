@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { store } from '@/lib/data';
+import { track } from '@/lib/analytics';
 import { SR } from '@/lib/i18n';
 
 function Thumb({ down }: { down?: boolean }) {
@@ -28,6 +29,7 @@ export default function AppRating({ context }: { context?: string }) {
   function send() {
     if (!value || done) return;
     setDone(true);
+    track('app_rating', { value, has_comment: !!comment.trim(), context });
     store.submitRating(value, comment.trim() || undefined, context).catch(() => {});
   }
 
