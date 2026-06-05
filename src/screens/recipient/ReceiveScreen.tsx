@@ -8,10 +8,12 @@ export default function ReceiveScreen({
   view,
   onPrimary,
   onDecline,
+  busy = false,
 }: {
   view: RecipientView;
   onPrimary: () => void; // direct → accept; friend → reveal
   onDecline: () => void;
+  busy?: boolean;
 }) {
   const friend = view.mode === 'friend';
   const c = COPY[view.mode];
@@ -57,8 +59,8 @@ export default function ReceiveScreen({
       </div>
 
       <div className="btn-row">
-        <button className="btn btn-primary btn-yes" onClick={onPrimary}>
-          {friend ? SR.recv.reveal : SR.recv.acceptDirect}
+        <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
+          {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
         </button>
         <button className="btn btn-outline" onClick={onDecline}>
           {SR.recv.decline}

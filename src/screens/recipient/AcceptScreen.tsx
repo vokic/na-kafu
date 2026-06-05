@@ -99,7 +99,7 @@ export default function AcceptScreen({
             onSubmit({ place, contact_type: contactType, contact_value: contactVal.trim(), reply_note: reply.trim() })
           }
         >
-          {SR.accept.submit}
+          {busy ? <span className="spinner" /> : SR.accept.submit}
         </button>
         <button className="btn btn-ghost" onClick={onBack}>
           {SR.accept.back}

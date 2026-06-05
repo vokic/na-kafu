@@ -62,7 +62,7 @@ export default function RejectScreen({
           disabled={!reason || busy}
           onClick={() => onSubmit({ reason, reason_note: note.trim() })}
         >
-          {SR.reject.submit}
+          {busy ? <span className="spinner" /> : SR.reject.submit}
         </button>
         <button className="btn btn-ghost" onClick={onBack}>
           {SR.accept.back}

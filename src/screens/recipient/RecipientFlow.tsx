@@ -147,6 +147,7 @@ export default function RecipientFlow({ token }: { token: string }) {
           view={view}
           onPrimary={view.mode === 'friend' ? goReveal : () => setStep('accept')}
           onDecline={() => setStep('reject')}
+          busy={busy}
         />
       )}
       {step === 'reveal' && reveal && (

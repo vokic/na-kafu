@@ -162,7 +162,7 @@ export default function BuildScreen({
 
       <div className="btn-row">
         <button className="btn btn-primary" disabled={!canSubmit || busy} onClick={onSubmit}>
-          {busy ? '…' : c.send}
+          {busy ? <span className="spinner" /> : c.send}
         </button>
         <button className="btn btn-ghost" onClick={onBack}>
           {SR.build.back}
