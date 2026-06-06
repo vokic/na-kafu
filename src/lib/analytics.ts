@@ -32,3 +32,12 @@ export function track(event: string, props?: Record<string, unknown>): void {
   if (!started) return;
   posthog.capture(event, props);
 }
+
+// Explicit pageview (capture_pageview is off). Called on first load + every route change so
+// PostHog gets daily visits + unique visitors, with $current_url for per-route breakdown.
+export function capturePageview(): void {
+  if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
+  if (!started) initAnalytics();
+  if (!started) return;
+  posthog.capture('$pageview');
+}
