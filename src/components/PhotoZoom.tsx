@@ -95,6 +95,17 @@ export default function PhotoZoom({ url, className }: { url: string; className?:
               if (armedRef.current) doClose();
             }}
           >
+            <button
+              type="button"
+              className="lightbox-close"
+              aria-label="Zatvori"
+              onClick={(e) => {
+                e.stopPropagation();
+                doClose();
+              }}
+            >
+              ×
+            </button>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" />
           </div>,
