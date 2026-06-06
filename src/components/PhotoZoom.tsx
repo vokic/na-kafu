@@ -1,25 +1,32 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { track } from '@/lib/analytics';
 
 // Avatar (circle, via background-image) that opens a full-screen zoom on click.
-// Guards against the touch "ghost click": the opening tap can echo onto the lightbox
-// (now under the finger) and close it instantly — so we ignore closes for ~250ms after open.
+// Touch "click-through" guard: the opening tap fires a compatibility mouse click that can land
+// on the freshly-rendered lightbox and close it instantly. We only close when a press actually
+// STARTS on the lightbox (pointerdown) — the click-through has no pointerdown there, so it's ignored.
 export default function PhotoZoom({ url, className }: { url: string; className?: string }) {
   const [open, setOpen] = useState(false);
-  const openedAt = useRef(0);
+  const pressedInside = useRef(false);
 
   function openZoom(e?: React.SyntheticEvent) {
     e?.stopPropagation();
-    openedAt.current = Date.now();
+    pressedInside.current = false;
     track('photo_zoomed');
     setOpen(true);
   }
-  function closeZoom() {
-    if (Date.now() - openedAt.current < 250) return;
-    setOpen(false);
-  }
+
+  // Esc closes (desktop / keyboard).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
 
   return (
     <>
@@ -38,7 +45,17 @@ export default function PhotoZoom({ url, className }: { url: string; className?:
         }}
       />
       {open && (
-        <div className="lightbox" onClick={closeZoom}>
+        <div
+          className="lightbox"
+          onPointerDown={() => {
+            pressedInside.current = true;
+          }}
+          onClick={() => {
+            if (!pressedInside.current) return; // ignore click-through from the opening tap
+            pressedInside.current = false;
+            setOpen(false);
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={url} alt="" />
         </div>
