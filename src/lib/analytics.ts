@@ -12,7 +12,10 @@ export function initAnalytics(): void {
   const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
   if (!key) return;
   posthog.init(key, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+    // Reverse proxy: events go through our own /ingest path (rewritten to PostHog EU in next.config.mjs)
+    // so first-party requests aren't dropped by ad-blockers. ui_host = where the PostHog app lives.
+    api_host: '/ingest',
+    ui_host: 'https://eu.posthog.com',
     capture_pageview: false, // we send explicit funnel events instead
     autocapture: false, // clean, intentional taxonomy only
     capture_pageleave: true,
