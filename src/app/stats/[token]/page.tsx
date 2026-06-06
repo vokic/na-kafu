@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 const pct = (n: number | null) => (n == null ? '—' : `${Math.round(n * 100)}%`);
 
 const C = {
-  page: { minHeight: '100vh', background: '#0D0419', color: '#FAF5EB', fontFamily: 'system-ui, sans-serif', padding: '32px 20px' } as const,
+  // position:fixed + own scroll so the global `body{overflow:hidden}` (phone-app desktop rule) doesn't
+  // clip this page — the 30-day table scrolls within the viewport.
+  page: { position: 'fixed', inset: 0, overflowY: 'auto', background: '#0D0419', color: '#FAF5EB', fontFamily: 'system-ui, sans-serif', padding: '32px 20px' } as const,
   wrap: { maxWidth: 880, margin: '0 auto' } as const,
   h1: { fontSize: 24, fontWeight: 800, margin: '0 0 4px' } as const,
   muted: { color: 'rgba(250,245,235,.55)', fontSize: 13 } as const,
