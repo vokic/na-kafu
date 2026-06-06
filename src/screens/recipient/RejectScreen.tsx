@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { SR } from '@/lib/i18n';
+import { track } from '@/lib/analytics';
 import { SAMPLE_REASON_NOTE } from '@/lib/devSamples';
 
 export interface RejectPayload {
@@ -64,7 +65,13 @@ export default function RejectScreen({
         >
           {busy ? <span className="spinner" /> : SR.reject.submit}
         </button>
-        <button className="btn btn-ghost" onClick={onBack}>
+        <button
+          className="btn btn-ghost"
+          onClick={() => {
+            track('back_clicked', { from: 'reject' });
+            onBack();
+          }}
+        >
           {SR.accept.back}
         </button>
       </div>

@@ -100,7 +100,19 @@ export default function SenderFlow() {
     <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={devFill}>
       {step === 'home' && <HomeScreen key="home" onStart={() => setStep('build')} />}
       {step === 'build' && (
-        <BuildScreen key="build" draft={draft} onChange={update} onBack={() => setStep('home')} onSubmit={submit} busy={busy} />
+        <BuildScreen
+          key="build"
+          draft={draft}
+          onChange={update}
+          onBack={() => {
+            track('build_abandoned', {
+              had_input: !!(draft.to || draft.msg || draft.from || draft.email || draft.about || draft.photo || draft.places.length),
+            });
+            setStep('home');
+          }}
+          onSubmit={submit}
+          busy={busy}
+        />
       )}
       {step === 'sent' && result && (
         <SentScreen

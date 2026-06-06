@@ -33,6 +33,7 @@ export default function BuildScreen({
 
   function togglePlace(p: string) {
     const has = draft.places.includes(p);
+    if (!has) track('place_selected', { place: p, side: 'sender' });
     onChange({ places: has ? draft.places.filter((x) => x !== p) : [...draft.places, p] });
   }
 
@@ -187,7 +188,13 @@ export default function BuildScreen({
         <button className="btn btn-primary" disabled={!canSubmit || busy} onClick={onSubmit}>
           {busy ? <span className="spinner" /> : c.send}
         </button>
-        <button className="btn btn-ghost" onClick={onBack}>
+        <button
+          className="btn btn-ghost"
+          onClick={() => {
+            track('back_clicked', { from: 'build' });
+            onBack();
+          }}
+        >
           {SR.build.back}
         </button>
       </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { SR } from '@/lib/i18n';
+import { track } from '@/lib/analytics';
 import { SAMPLE_CONTACT, SAMPLE_REPLY } from '@/lib/devSamples';
 import type { ContactType } from '@/lib/types';
 
@@ -53,7 +54,15 @@ export default function AcceptScreen({
           <label className="label">{SR.accept.placeLabel}</label>
           <div className="chips">
             {places.map((p) => (
-              <button key={p} type="button" className={`chip${place === p ? ' sel' : ''}`} onClick={() => setPlace(p)}>
+              <button
+                key={p}
+                type="button"
+                className={`chip${place === p ? ' sel' : ''}`}
+                onClick={() => {
+                  track('place_selected', { place: p, side: 'recipient' });
+                  setPlace(p);
+                }}
+              >
                 {p}
               </button>
             ))}
@@ -101,7 +110,13 @@ export default function AcceptScreen({
         >
           {busy ? <span className="spinner" /> : SR.accept.submit}
         </button>
-        <button className="btn btn-ghost" onClick={onBack}>
+        <button
+          className="btn btn-ghost"
+          onClick={() => {
+            track('back_clicked', { from: 'accept' });
+            onBack();
+          }}
+        >
           {SR.accept.back}
         </button>
       </div>
