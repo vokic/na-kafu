@@ -80,13 +80,13 @@ export default function BuildScreen({
         {SR.build.heading.l1} <span className="offset" style={{ marginLeft: 0 }}>{SR.build.heading.l2}</span>
       </h1>
 
-      <div className="stagger" style={{ margin: '0 -22px', padding: '8px 22px 0' }}>
+      <div className="stagger fieldgrid" style={{ margin: '0 -22px', padding: '8px 22px 0' }}>
         <div>
           <label className="label">{SR.build.fields.name}</label>
           <input type="text" value={draft.to} placeholder="Mila" onChange={(e) => onChange({ to: e.target.value })} />
         </div>
 
-        <div>
+        <div className="span2">
           <label className="label">{SR.build.fields.message}</label>
           <textarea value={draft.msg} onChange={(e) => onChange({ msg: e.target.value })} />
           <div className="about" style={{ margin: '8px 2px 0' }}>
@@ -94,7 +94,7 @@ export default function BuildScreen({
           </div>
         </div>
 
-        <div>
+        <div className="span2">
           <label className="label">
             {SR.build.fields.places} <small>· {SR.build.fields.placesHint}</small>
           </label>
@@ -137,7 +137,7 @@ export default function BuildScreen({
           />
         </div>
 
-        <div>
+        <div className="span2">
           <label className="label">
             {SR.build.fields.about} <small>· {SR.build.fields.opt}</small>
           </label>
@@ -164,7 +164,7 @@ export default function BuildScreen({
           </div>
         </div>
 
-        <div>
+        <div className="span2">
           <label className="label">{SR.build.fields.theme}</label>
           <div className="themepick">
             {THEMES.map((t) => (

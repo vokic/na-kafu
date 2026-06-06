@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
+import BrandAside from '@/components/BrandAside';
+import { EnvelopeIcon, PlaneIcon, CheckIcon, RainIcon } from '@/components/hearts';
 import InfoScreen from '@/components/InfoScreen';
 import LoadingScreen from '@/components/LoadingScreen';
 import ResultScreen, { type ResultRow } from '@/components/ResultScreen';
@@ -159,8 +161,33 @@ export default function RecipientFlow({ token }: { token: string }) {
     </button>
   );
 
+  const aside = (() => {
+    switch (step) {
+      case 'reveal':
+        return <BrandAside icon={<PlaneIcon size={80} />} caption={SR.aside.reveal} />;
+      case 'accept':
+        return <BrandAside icon={<CheckIcon size={78} />} caption={SR.aside.accept} />;
+      case 'reject':
+        return <BrandAside icon={<RainIcon size={78} />} caption={SR.aside.reject} calm />;
+      case 'result':
+        return outcome?.accepted ? (
+          <BrandAside icon={<CheckIcon size={78} />} caption={SR.aside.result} />
+        ) : (
+          <BrandAside icon={<RainIcon size={78} />} caption={SR.aside.result} calm />
+        );
+      case 'expired':
+      case 'notfound':
+      case 'closed':
+        return <BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.gone} />;
+      case 'receive':
+        return <BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.receive} />;
+      default:
+        return <BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.loading} />;
+    }
+  })();
+
   return (
-    <PhoneShell showThemeSwitcher={false} onDevFill={() => setFillSignal((s) => s + 1)}>
+    <PhoneShell showThemeSwitcher={false} onDevFill={() => setFillSignal((s) => s + 1)} aside={aside}>
       {step === 'loading' && <LoadingScreen key="loading" />}
       {step === 'notfound' && (
         <InfoScreen

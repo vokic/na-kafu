@@ -3,6 +3,8 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
+import BrandAside from '@/components/BrandAside';
+import { EnvelopeIcon, PlaneIcon } from '@/components/hearts';
 import { useTheme } from '@/state/ThemeProvider';
 import { store, StoreError } from '@/lib/data';
 import { track } from '@/lib/analytics';
@@ -96,8 +98,17 @@ export default function SenderFlow() {
       places: SR.places.slice(0, 3),
     }));
 
+  const aside =
+    step === 'sent' ? (
+      <BrandAside icon={<PlaneIcon size={80} />} caption={SR.aside.sent} />
+    ) : step === 'build' ? (
+      <BrandAside icon={<EnvelopeIcon size={84} />} caption={SR.aside.build} />
+    ) : (
+      <BrandAside icon={<EnvelopeIcon size={84} />} caption={SR.aside.home} />
+    );
+
   return (
-    <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={devFill}>
+    <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={devFill} aside={aside}>
       {step === 'home' && <HomeScreen key="home" onStart={() => setStep('build')} />}
       {step === 'build' && (
         <BuildScreen

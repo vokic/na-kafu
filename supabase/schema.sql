@@ -18,7 +18,7 @@ create table if not exists invites (
   theme             text not null default 'light'
                       check (theme in ('light','dark','pink','peach','holo','aurora')),
   status            text not null default 'pending'
-                      check (status in ('pending','opened','accepted','declined')),
+                      check (status in ('pending','opened','accepted','declined','cancelled')),
   user_id           uuid,                            -- null in MVP (Phase 2 accounts)
   created_at        timestamptz default now(),
   expires_at        timestamptz not null default (now() + interval '24 hours'),  -- link valid 24h
@@ -78,3 +78,10 @@ grant all privileges on all tables in schema public to service_role;
 grant all privileges on all sequences in schema public to service_role;
 alter default privileges in schema public grant all on tables to service_role;
 alter default privileges in schema public grant all on sequences to service_role;
+
+-- ---------------------------------------------------------------------------
+-- MIGRATION (run on an existing live DB to allow sender-cancelled invites):
+--   alter table invites drop constraint if exists invites_status_check;
+--   alter table invites add constraint invites_status_check
+--     check (status in ('pending','opened','accepted','declined','cancelled'));
+-- ---------------------------------------------------------------------------

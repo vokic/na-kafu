@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
+import BrandAside from '@/components/BrandAside';
 import InfoScreen from '@/components/InfoScreen';
 import LoadingScreen from '@/components/LoadingScreen';
 import { CheckIcon, EnvelopeIcon, RainIcon } from '@/components/hearts';
@@ -31,6 +32,8 @@ export default function ManageView({ token }: { token: string }) {
   const { setTheme } = useTheme();
   const [data, setData] = useState<ManageData | null>(null);
   const [state, setState] = useState<'loading' | 'notfound' | 'ready'>('loading');
+  const [confirm, setConfirm] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -51,16 +54,42 @@ export default function ManageView({ token }: { token: string }) {
     };
   }, [token, setTheme]);
 
+  // Arriving from the email's "Otkaži poziv" link (?cancel=1) → open the confirm directly.
+  useEffect(() => {
+    if (state !== 'ready' || !data) return;
+    const wants = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('cancel') === '1';
+    if (wants && (data.invite.status === 'pending' || data.invite.status === 'opened')) setConfirm(true);
+  }, [state, data]);
+
+  async function doCancel() {
+    setBusy(true);
+    try {
+      await store.cancelInvite(token);
+      track('invite_cancelled', { from: 'manage' });
+      setData((d) => (d ? { ...d, invite: { ...d.invite, status: 'cancelled' } } : d));
+    } catch {
+      // e.g. ALREADY_RESPONDED — refetch so the view reflects the real state.
+      try {
+        setData(await store.getManage(token));
+      } catch {
+        /* ignore */
+      }
+    } finally {
+      setConfirm(false);
+      setBusy(false);
+    }
+  }
+
   if (state === 'loading') {
     return (
-      <PhoneShell showThemeSwitcher={false}>
+      <PhoneShell showThemeSwitcher={false} aside={<BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.loading} />}>
         <LoadingScreen />
       </PhoneShell>
     );
   }
   if (state === 'notfound' || !data) {
     return (
-      <PhoneShell showThemeSwitcher={false}>
+      <PhoneShell showThemeSwitcher={false} aside={<BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.gone} />}>
         <InfoScreen
           title={SR.notFound.title}
           sub={SR.notFound.sub}
@@ -74,11 +103,21 @@ export default function ManageView({ token }: { token: string }) {
   const friend = invite.mode === 'friend';
   const accepted = response?.decision === 'accepted';
   const declined = response?.decision === 'declined';
+  const isCancelled = invite.status === 'cancelled';
+  const cancellable = invite.status === 'pending' || invite.status === 'opened';
   const statusLabel = SR.manage.statusLabels[invite.status] ?? invite.status;
   const shareDisplay = buildShareUrl(invite.invite_token).replace(/^https?:\/\//, '');
 
+  const manageAside = accepted ? (
+    <BrandAside icon={<CheckIcon size={78} />} caption={SR.aside.manage} />
+  ) : declined ? (
+    <BrandAside icon={<RainIcon size={78} />} caption={SR.aside.manage} calm />
+  ) : (
+    <BrandAside icon={<EnvelopeIcon size={82} />} caption={SR.aside.manage} />
+  );
+
   return (
-    <PhoneShell showThemeSwitcher={false}>
+    <PhoneShell showThemeSwitcher={false} aside={manageAside}>
       <section className="screen on">
         <h1 className="sm" style={{ marginBottom: 6 }}>
           {SR.manage.heading.l1}
@@ -148,6 +187,15 @@ export default function ManageView({ token }: { token: string }) {
                 </>
               )}
             </div>
+          ) : isCancelled ? (
+            <div className="result-card" style={{ marginTop: 16, textAlign: 'center' }}>
+              <div className="v" style={{ fontSize: 16 }}>
+                {SR.manage.cancelledTitle}
+              </div>
+              <div className="k" style={{ marginTop: 8, textTransform: 'none', letterSpacing: 0 }}>
+                {SR.manage.cancelledSub}
+              </div>
+            </div>
           ) : (
             <div className="result-card" style={{ marginTop: 16, textAlign: 'center' }}>
               <div className="v" style={{ fontSize: 16 }}>
@@ -202,9 +250,28 @@ export default function ManageView({ token }: { token: string }) {
         </div>
 
         <div className="btn-row">
-          <button className="btn btn-primary" onClick={() => router.push('/')}>
-            {SR.result.newInvite}
-          </button>
+          {confirm ? (
+            <>
+              <div className="cancel-confirm">{SR.manage.cancelConfirm}</div>
+              <button className="btn btn-primary btn-danger" disabled={busy} onClick={doCancel}>
+                {busy ? <span className="spinner" /> : SR.manage.cancelYes}
+              </button>
+              <button className="btn btn-ghost" disabled={busy} onClick={() => setConfirm(false)}>
+                {SR.manage.cancelNo}
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-primary" onClick={() => router.push('/')}>
+                {SR.result.newInvite}
+              </button>
+              {cancellable && (
+                <button className="btn btn-ghost danger" onClick={() => setConfirm(true)}>
+                  {SR.manage.cancel}
+                </button>
+              )}
+            </>
+          )}
         </div>
       </section>
     </PhoneShell>

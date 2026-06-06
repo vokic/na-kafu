@@ -4,6 +4,21 @@
 export const SR = {
   brand: 'na kafu?',
 
+  // Desktop-only left-pane captions (one per step).
+  aside: {
+    home: 'Bez treme.',
+    build: 'Reci ko, šta i gde.',
+    sent: 'Podeli link.',
+    receive: 'Neko te zove.',
+    reveal: 'Ko se krije?',
+    accept: 'Reci da.',
+    reject: 'Reci ne, lepo.',
+    result: 'Poslato.',
+    manage: 'Pratiš status.',
+    loading: 'Tren…',
+    gone: 'Nije dostupno.',
+  },
+
   home: {
     // Rotating accent line; each completes "Pozovi nekoga, ___"
     accents: ['bez treme.', 'na kreativan način.', 'hrabro.', 'bez stresa.', 'iz prve.', 'lako.', 'danas.'],
@@ -116,11 +131,18 @@ export const SR = {
     waitingSub: 'Javićemo ti čim odgovori. Ovde pratiš status.',
     timeline: 'Tok',
     yourLink: 'Tvoj link',
+    cancel: 'Otkaži poziv',
+    cancelConfirm: 'Sigurno? Link odmah prestaje da važi i ne može da se vrati.',
+    cancelYes: 'Da, otkaži',
+    cancelNo: 'Ne, ostavi',
+    cancelledTitle: 'Pozivnica je otkazana.',
+    cancelledSub: 'Link više ne radi.',
     statusLabels: {
       pending: 'Poslato',
       opened: 'Otvoreno',
       accepted: 'Prihvaćeno',
       declined: 'Odbijeno',
+      cancelled: 'Otkazano',
     } as Record<string, string>,
   },
 
@@ -130,6 +152,7 @@ export const SR = {
     revealed: 'Otkrila je ko si',
     accepted: 'Prihvatila je',
     declined: 'Odbila je',
+    cancelled: 'Pozivnica otkazana',
     email_sent: 'Mejl poslat',
     email_failed: 'Mejl nije poslat',
     reported: 'Prijavljeno',

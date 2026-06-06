@@ -60,6 +60,11 @@ export class ApiInviteStore implements InviteStore {
     return handle(res);
   }
 
+  async cancelInvite(token: string): Promise<void> {
+    const res = await fetch(`/api/manage/${encodeURIComponent(token)}/cancel`, { method: 'POST' });
+    await handle(res);
+  }
+
   async submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void> {
     // Best-effort — feedback must never break the UX.
     try {

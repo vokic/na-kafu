@@ -7,7 +7,7 @@ export type Mode = 'direct' | 'friend';
 // the BE schema enum should map peach->soft and add aurora.
 export type ThemeName = 'light' | 'dark' | 'pink' | 'peach' | 'holo' | 'aurora';
 
-export type InviteStatus = 'pending' | 'opened' | 'accepted' | 'declined';
+export type InviteStatus = 'pending' | 'opened' | 'accepted' | 'declined' | 'cancelled';
 export type Decision = 'accepted' | 'declined';
 export type ContactType = 'Instagram' | 'Telefon' | 'Email' | 'Snapchat';
 
@@ -17,6 +17,7 @@ export type EventType =
   | 'revealed'
   | 'accepted'
   | 'declined'
+  | 'cancelled'    // sender cancelled the invite (link dies)
   | 'email_sent'   // reserved (BE phase)
   | 'email_failed' // reserved
   | 'reported';    // reserved

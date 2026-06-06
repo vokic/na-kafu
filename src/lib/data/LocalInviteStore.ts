@@ -116,6 +116,7 @@ export class LocalInviteStore implements InviteStore {
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
     if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
+    if (invite.status === 'cancelled') throw new StoreError('EXPIRED', 'Pozivnica je otkazana.');
 
     // First open
     if (invite.status === 'pending') {
@@ -151,6 +152,7 @@ export class LocalInviteStore implements InviteStore {
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
     if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
+    if (invite.status === 'cancelled') throw new StoreError('EXPIRED', 'Pozivnica je otkazana.');
     if (invite.mode !== 'friend') throw new StoreError('INVALID', 'Otkrivanje važi samo za "preko druga".');
 
     if (!invite.revealed_at) {
@@ -170,6 +172,7 @@ export class LocalInviteStore implements InviteStore {
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
     if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
+    if (invite.status === 'cancelled') throw new StoreError('EXPIRED', 'Pozivnica je otkazana.');
 
     const existing = readJSON<InviteResponse>(KEYS.response(inviteToken));
     if (existing) throw new StoreError('ALREADY_RESPONDED', 'Već je odgovoreno.');
@@ -218,6 +221,20 @@ export class LocalInviteStore implements InviteStore {
     const events = this.loadEvents(inviteToken);
 
     return { invite, response, events };
+  }
+
+  async cancelInvite(manageToken: string): Promise<void> {
+    const inviteToken = readJSON<string>(KEYS.manage(manageToken));
+    if (!inviteToken) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
+    const invite = this.loadInvite(inviteToken);
+    if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
+    if (invite.status === 'cancelled') return;
+    if (invite.status === 'accepted' || invite.status === 'declined') {
+      throw new StoreError('ALREADY_RESPONDED', 'Već je odgovoreno - ne može da se otkaže.');
+    }
+    invite.status = 'cancelled';
+    this.saveInvite(invite);
+    this.pushEvent(invite, 'cancelled');
   }
 
   async submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void> {

@@ -25,6 +25,12 @@ function ensureNotExpired(invite: Invite): void {
   }
 }
 
+// Recipient-facing guard: cancelled invites read as expired so the link is dead.
+function ensureActive(invite: Invite): void {
+  if (invite.status === 'cancelled') throw new ApiError('EXPIRED', 'Pozivnica je otkazana.');
+  ensureNotExpired(invite);
+}
+
 async function logEvent(inviteId: string, type: string, meta: Record<string, unknown> | null = null) {
   await supabaseAdmin().from('events').insert({ invite_id: inviteId, type, meta });
 }
@@ -99,7 +105,7 @@ export async function getInvite(token: string): Promise<RecipientView> {
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
-  ensureNotExpired(invite);
+  ensureActive(invite);
 
   if (invite.status === 'pending') {
     await sb.from('invites').update({ status: 'opened', opened_at: nowIso() }).eq('id', invite.id);
@@ -135,7 +141,7 @@ export async function reveal(token: string): Promise<RevealResult> {
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
-  ensureNotExpired(invite);
+  ensureActive(invite);
   if (invite.mode !== 'friend') throw new ApiError('INVALID', 'Otkrivanje važi samo za "preko druga".');
   if (!invite.revealed_at) {
     await sb.from('invites').update({ revealed_at: nowIso() }).eq('id', invite.id);
@@ -150,7 +156,7 @@ export async function respond(token: string, payload: RespondPayload, baseUrl: s
   if (error) throw new ApiError('SERVER', error.message);
   if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
   const invite = data as Invite;
-  ensureNotExpired(invite);
+  ensureActive(invite);
 
   if (payload.decision === 'accepted' && !payload.place) throw new ApiError('INVALID', 'Izaberi mesto.');
   if (payload.decision === 'declined' && !payload.reason) throw new ApiError('INVALID', 'Razlog je obavezan.');
@@ -199,4 +205,21 @@ export async function getManage(manageToken: string): Promise<ManageView> {
     response: (resp as InviteResponse | null) ?? null,
     events: (evts as InviteEvent[] | null) ?? [],
   };
+}
+
+// Sender cancels via their manage_token → status 'cancelled', recipient link dies.
+// Refuses if already responded; idempotent if already cancelled.
+export async function cancelInvite(manageToken: string): Promise<void> {
+  const sb = supabaseAdmin();
+  const { data, error } = await sb.from('invites').select('*').eq('manage_token', manageToken).maybeSingle();
+  if (error) throw new ApiError('SERVER', error.message);
+  if (!data) throw new ApiError('NOT_FOUND', 'Pozivnica ne postoji.');
+  const invite = data as Invite;
+  if (invite.status === 'cancelled') return;
+  if (invite.status === 'accepted' || invite.status === 'declined') {
+    throw new ApiError('ALREADY_RESPONDED', 'Već je odgovoreno - ne može da se otkaže.');
+  }
+  const { error: updErr } = await sb.from('invites').update({ status: 'cancelled' }).eq('id', invite.id);
+  if (updErr) throw new ApiError('SERVER', updErr.message);
+  await logEvent(invite.id, 'cancelled');
 }

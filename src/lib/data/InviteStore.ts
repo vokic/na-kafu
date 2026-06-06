@@ -37,6 +37,9 @@ export interface InviteStore {
   /** Sender view: invite + response + events timeline. */
   getManage(manageToken: string): Promise<ManageView>;
 
+  /** Sender cancels via manage_token → status 'cancelled', recipient link dies. */
+  cancelInvite(manageToken: string): Promise<void>;
+
   /** App feedback: thumbs up/down + optional short comment. `context` = where it came from. */
   submitRating(value: 'up' | 'down', comment?: string, context?: string): Promise<void>;
 }

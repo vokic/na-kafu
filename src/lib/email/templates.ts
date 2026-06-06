@@ -16,6 +16,10 @@ function button(href: string, label: string): string {
   return `<a href="${href}" style="display:inline-block;background:#0D0419;color:#FAF5EB;text-decoration:none;font-weight:700;padding:13px 20px;border-radius:999px;margin:6px 0">${label}</a>`;
 }
 
+function buttonGhost(href: string, label: string): string {
+  return `<a href="${href}" style="display:inline-block;background:#FFFFFF;color:#0D0419;text-decoration:none;font-weight:700;padding:11px 18px;border-radius:999px;border:1.5px solid #d9d4cb;margin:6px 0">${label}</a>`;
+}
+
 export async function sendConfirmationEmail(invite: Invite, shareUrl: string, manageUrl: string): Promise<boolean> {
   const friend = invite.mode === 'friend';
   const how = friend
@@ -29,7 +33,10 @@ export async function sendConfirmationEmail(invite: Invite, shareUrl: string, ma
      <p style="color:#8a8290;font-size:12px;word-break:break-all;margin:4px 0 18px">${shareUrl}</p>
      <p style="margin:0 0 4px;font-weight:700;font-size:13px">Prati status (samo ti)</p>
      ${button(manageUrl, 'Vidi status')}
-     <p style="color:#8a8290;font-size:12px;word-break:break-all;margin:4px 0 0">${manageUrl}</p>`,
+     <p style="color:#8a8290;font-size:12px;word-break:break-all;margin:4px 0 18px">${manageUrl}</p>
+     <p style="margin:0 0 4px;font-weight:700;font-size:13px">Predomislio si se?</p>
+     ${buttonGhost(`${manageUrl}?cancel=1`, 'Otkaži poziv')}
+     <p style="color:#8a8290;font-size:12px;margin:4px 0 0">Otkazivanje odmah gasi link.</p>`,
   );
   return sendEmail({ to: invite.sender_email, subject: 'Tvoja pozivnica je spremna', html });
 }

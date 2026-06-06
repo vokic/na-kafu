@@ -13,18 +13,18 @@
   --heart-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50,97 C18,72 0,46 0,28 C0,10 14,0 28,0 C40,0 47,7 50,17 C53,7 60,0 72,0 C86,0 100,10 100,28 C100,46 82,72 50,97 Z' fill='%23000'/%3E%3C/svg%3E");
 }
 
-.phone[data-theme="light"]{--bg:#FAF5EB;--fg:#0D0419;--muted:rgba(13,4,25,.55);--line:rgba(13,4,25,.15);
+.phone[data-theme="light"],.brandpane[data-theme="light"]{--bg:#FAF5EB;--fg:#0D0419;--muted:rgba(13,4,25,.55);--line:rgba(13,4,25,.15);
   --card:#FFFFFF;--btn-bg:#0D0419;--btn-fg:#FAF5EB;--block:#FFB3C7;--block-fg:#0D0419;--accent:#FFB3C7;--accent-on:#0D0419}
-.phone[data-theme="dark"]{--bg:#0D0419;--fg:#FAF5EB;--muted:rgba(250,245,235,.6);--line:rgba(250,245,235,.18);
+.phone[data-theme="dark"],.brandpane[data-theme="dark"]{--bg:#0D0419;--fg:#FAF5EB;--muted:rgba(250,245,235,.6);--line:rgba(250,245,235,.18);
   --card:#1A0F28;--btn-bg:#FFB3C7;--btn-fg:#0D0419;--block:#FFB3C7;--block-fg:#0D0419;--accent:#FFB3C7;--accent-on:#0D0419}
-.phone[data-theme="pink"]{--bg:#FFB3C7;--fg:#0D0419;--muted:rgba(13,4,25,.6);--line:rgba(13,4,25,.2);
+.phone[data-theme="pink"],.brandpane[data-theme="pink"]{--bg:#FFB3C7;--fg:#0D0419;--muted:rgba(13,4,25,.6);--line:rgba(13,4,25,.2);
   --card:#FFFFFF;--btn-bg:#0D0419;--btn-fg:#FFB3C7;--block:#0D0419;--block-fg:#FFB3C7;--accent:#0D0419;--accent-on:#FFB3C7}
 
-.phone[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#7B97A4;--line:#F0E4DF;
+.phone[data-theme="peach"],.brandpane[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#7B97A4;--line:#F0E4DF;
   --card:#FFFFFF;--btn-bg:#FB4E8D;--btn-fg:#FFFFFF;--block:#FF6FA0;--block-fg:#FFFFFF;--accent:#FB4E8D;--accent-on:#FFFFFF;
   font-family:var(--font-poppins),sans-serif}
 
-.phone[data-theme="holo"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.66);--line:rgba(255,255,255,.26);
+.phone[data-theme="holo"],.brandpane[data-theme="holo"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.66);--line:rgba(255,255,255,.26);
   --card:rgba(255,255,255,.12);--btn-bg:#FFFFFF;--btn-fg:#1a0820;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:#FFFFFF;--accent-on:#1a0820}
 .phone[data-theme="holo"] .holobg{display:block}
 .phone[data-theme="holo"] .card,.phone[data-theme="holo"] .reveal-card,.phone[data-theme="holo"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
@@ -32,7 +32,7 @@
 .phone[data-theme="holo"] h1,.phone[data-theme="holo"] .lead,.phone[data-theme="holo"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
 
 /* ===== Aurora skin (animation from holo-animacija) + glass buttons ===== */
-.phone[data-theme="aurora"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.68);--line:rgba(255,255,255,.30);
+.phone[data-theme="aurora"],.brandpane[data-theme="aurora"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.68);--line:rgba(255,255,255,.30);
   --card:rgba(255,255,255,.12);--btn-bg:rgba(255,255,255,.18);--btn-fg:#FFFFFF;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:rgba(255,255,255,.92);--accent-on:#160726}
 .phone[data-theme="aurora"] .aurorabg{display:block}
 .phone[data-theme="aurora"] .card,.phone[data-theme="aurora"] .reveal-card,.phone[data-theme="aurora"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
@@ -169,6 +169,9 @@ input:focus,textarea:focus{border-color:var(--fg)}
 .btn-ghost{background:transparent;color:var(--muted);font-weight:600;font-size:15px}
 .btn:disabled{opacity:.35;cursor:not-allowed}
 .btn-row{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding-top:18px}
+.btn-ghost.danger{color:#D23F5F}
+.btn-danger{background:#D23F5F;color:#fff}
+.cancel-confirm{font-size:13px;color:var(--muted);text-align:center;font-weight:600;line-height:1.4;margin-bottom:2px}
 .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .lightbox{position:fixed;inset:0;z-index:200;background:rgba(8,2,16,.86);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:rise .25s ease}
@@ -243,6 +246,44 @@ input,textarea{-webkit-user-select:text;user-select:text}
 input[type=text],textarea{-webkit-appearance:none;appearance:none;border-radius:999px}
 textarea{border-radius:22px}
 img{max-width:100%;display:block}
+
+/* =========================================================================
+   Desktop split (>=900px): left brand pane (per-step heart + caption) + right
+   content pane. Below 900px the stage is transparent and the brandpane hidden,
+   so mobile/tablet render EXACTLY as before (phone is a direct body child).
+   ========================================================================= */
+.stage{display:contents}
+.brandpane{display:none}
+
+@media (min-width:900px){
+  body{padding:24px}
+  .stage{display:flex;align-items:stretch;justify-content:center;width:100%;max-width:980px;max-height:92vh;
+    border-radius:34px;overflow:hidden;box-shadow:0 40px 90px -40px rgba(40,20,40,.5)}
+  /* left brand pane */
+  .brandpane{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    flex:0 0 340px;padding:44px 30px;gap:24px;background:var(--bg);color:var(--fg);border-right:1px solid var(--line)}
+  .brandpane-logo{font-weight:800;font-size:24px;letter-spacing:-.6px}
+  .brandpane .smoosh{width:170px;height:156px}
+  .brandpane-caption{font-size:19px;font-weight:600;color:var(--muted);max-width:16ch;line-height:1.3}
+  /* right content pane: the phone fills it, no card chrome of its own */
+  .phone{max-width:none;flex:1;min-height:0;border-radius:0;box-shadow:none;overflow-y:auto;padding:30px 36px}
+  .phone .holobg,.phone .aurorabg{border-radius:0}
+  /* the brand pane carries the visual → drop the in-screen decorative hearts */
+  .phone .smwrap-c,.phone .smwrap{display:none}
+  /* dense form (Build) fits one viewport: two columns; wide fields span both, dense fill avoids gaps */
+  .fieldgrid{display:grid;grid-template-columns:1fr 1fr;column-gap:18px;align-items:start;grid-auto-flow:dense}
+  .fieldgrid>.span2{grid-column:1 / -1}
+  /* no duplicate wordmark on desktop — the brand pane carries it; keep the switcher on the right */
+  .phone .topbar .brand{display:none}
+  .phone .topbar{justify-content:flex-end}
+  /* glass themes: soft themed glow instead of a flat-black pane around the heart */
+  .brandpane[data-theme="holo"]{background:
+    radial-gradient(125% 100% at 50% 32%, rgba(90,63,224,.55), rgba(31,176,192,.22) 46%, rgba(10,4,24,0) 72%),
+    radial-gradient(95% 75% at 50% 92%, rgba(194,58,158,.34), transparent 70%), #0a0418}
+  .brandpane[data-theme="aurora"]{background:
+    radial-gradient(125% 100% at 50% 32%, rgba(122,31,208,.5), rgba(255,30,156,.26) 46%, rgba(10,4,24,0) 72%),
+    radial-gradient(95% 75% at 50% 92%, rgba(0,230,255,.26), transparent 70%), #0a0418}
+}
 
 /* =========================================================================
    Responsive framing

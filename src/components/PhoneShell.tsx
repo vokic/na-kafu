@@ -15,25 +15,30 @@ export default function PhoneShell({
   showThemeSwitcher = true,
   topRight = null,
   onDevFill,
+  aside = null,
 }: {
   children: React.ReactNode;
   showThemeSwitcher?: boolean;
   topRight?: React.ReactNode;
   onDevFill?: () => void;
+  aside?: React.ReactNode; // desktop-only left pane (>=900px); ignored on mobile/tablet
 }) {
   const { theme } = useTheme();
   return (
-    <div className="phone" data-theme={theme}>
-      <SvgDefs />
-      <HoloBg />
-      <AuroraBg />
-      <TopBar showThemeSwitcher={showThemeSwitcher} right={topRight} />
-      {children}
-      {onDevFill && (
-        <button className="fillbtn" type="button" title="popuni polja (test)" onClick={onDevFill}>
-          ⚡
-        </button>
-      )}
+    <div className="stage">
+      {aside}
+      <div className="phone" data-theme={theme}>
+        <SvgDefs />
+        <HoloBg />
+        <AuroraBg />
+        <TopBar showThemeSwitcher={showThemeSwitcher} right={topRight} />
+        {children}
+        {onDevFill && (
+          <button className="fillbtn" type="button" title="popuni polja (test)" onClick={onDevFill}>
+            ⚡
+          </button>
+        )}
+      </div>
     </div>
   );
 }
