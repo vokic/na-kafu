@@ -256,8 +256,10 @@ img{max-width:100%;display:block}
 .brandpane{display:none}
 
 @media (min-width:900px){
-  body{padding:24px}
-  .stage{display:flex;align-items:stretch;justify-content:center;width:100%;max-width:980px;max-height:92vh;
+  /* fixed-height card centered in the viewport; the page itself does NOT scroll (no browser
+     scrollbar). Only the inner .screen.on scrolls, with our styled scrollbar. */
+  body{padding:24px;overflow:hidden}
+  .stage{display:flex;align-items:stretch;justify-content:center;width:100%;max-width:980px;height:min(880px,92vh);
     border-radius:34px;overflow:hidden;box-shadow:0 40px 90px -40px rgba(40,20,40,.5)}
   /* left brand pane */
   .brandpane{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
@@ -265,9 +267,29 @@ img{max-width:100%;display:block}
   .brandpane-logo{font-weight:800;font-size:24px;letter-spacing:-.6px}
   .brandpane .smoosh{width:170px;height:156px}
   .brandpane-caption{font-size:19px;font-weight:600;color:var(--muted);max-width:16ch;line-height:1.3}
-  /* right content pane: the phone fills it, no card chrome of its own */
-  .phone{max-width:none;flex:1;min-height:0;border-radius:0;box-shadow:none;overflow-y:auto;padding:30px 36px}
+  /* right content pane: the phone fills it, no card chrome of its own. The phone itself does NOT
+     scroll (so the holo/aurora background layer always covers the full pane); only the inner
+     screen content scrolls — no black strip appears below the fold on glass themes. */
+  /* bottom padding on the phone keeps the scroll area (and its scrollbar) clear of the card's
+     34px rounded bottom corners, so the scrollbar never gets clipped / "pops out" at the curve. */
+  .phone{max-width:none;flex:1;min-height:0;border-radius:0;box-shadow:none;overflow:hidden;padding:0 0 34px}
   .phone .holobg,.phone .aurorabg{border-radius:0}
+  /* padding lives on the topbar + the scroll area (not the phone) so the scrollbar sits flush
+     against the pane's right edge while the content stays inset. */
+  .phone .topbar{padding:26px 34px 0}
+  .phone .screen.on{min-height:0;padding:2px 34px 10px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    scrollbar-gutter:stable}
+  .phone .screen.on::-webkit-scrollbar{width:11px}
+  .phone .screen.on::-webkit-scrollbar-track{background:transparent}
+  .phone .screen.on::-webkit-scrollbar-thumb{background-color:var(--muted);border-radius:999px;
+    border:3.5px solid transparent;background-clip:padding-box}
+  .phone .screen.on::-webkit-scrollbar-thumb:hover{background-color:var(--fg)}
+  .phone .screen.on::-webkit-scrollbar-button{display:none;width:0;height:0}
+  .phone .screen.on::-webkit-scrollbar-corner{background:transparent}
+  /* Firefox (no ::-webkit-scrollbar support): use the standard props — Firefox shows no arrows anyway */
+  @supports not selector(::-webkit-scrollbar){
+    .phone .screen.on{scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+  }
   /* the brand pane carries the visual → drop the in-screen decorative hearts */
   .phone .smwrap-c,.phone .smwrap{display:none}
   /* dense form (Build) fits one viewport: two columns; wide fields span both, dense fill avoids gaps */
