@@ -181,6 +181,10 @@ input:focus,textarea:focus{border-color:var(--fg)}
   color:#fff;background:rgba(255,255,255,.16);border:none;border-radius:50%;padding:0;cursor:pointer;
   -webkit-tap-highlight-color:transparent;backdrop-filter:blur(7px);box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
 .lightbox-close:active{transform:scale(.9)}
+/* little magnifier badge on a zoomable avatar → signals "tap to zoom" */
+.zoom-badge{position:absolute;right:-3px;bottom:-3px;width:26px;height:26px;border-radius:50%;
+  background:var(--btn-bg);color:var(--btn-fg);display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--card);box-shadow:0 2px 8px -2px rgba(0,0,0,.4);pointer-events:none}
 .fillbtn{position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));z-index:60;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
   font-size:15px;color:#fff;background:rgba(20,8,24,.5);border:none;border-radius:50%;padding:0;cursor:pointer;
   backdrop-filter:blur(6px);box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
