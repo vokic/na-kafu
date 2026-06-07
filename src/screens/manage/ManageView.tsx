@@ -34,6 +34,7 @@ export default function ManageView({ token }: { token: string }) {
   const [state, setState] = useState<'loading' | 'notfound' | 'ready'>('loading');
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -242,9 +243,13 @@ export default function ManageView({ token }: { token: string }) {
             <span>{shareDisplay}</span>
             <button
               className="copy"
-              onClick={() => navigator.clipboard?.writeText(buildShareUrl(invite.invite_token)).catch(() => {})}
+              onClick={() => {
+                navigator.clipboard?.writeText(buildShareUrl(invite.invite_token)).catch(() => {});
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1800);
+              }}
             >
-              {SR.sent.copy}
+              {copied ? SR.sent.copied : SR.sent.copy}
             </button>
           </div>
         </div>

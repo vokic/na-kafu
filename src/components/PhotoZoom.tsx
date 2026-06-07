@@ -4,25 +4,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { track } from '@/lib/analytics';
 
-// Avatar that opens a full-screen zoom. The lightbox is portaled to <body> so no ancestor
-// (.phone overflow:hidden, .card backdrop-filter on glass themes, the transformed .screen) can
-// clip/contain a position:fixed overlay. The backdrop is "armed" only AFTER a painted frame, so
-// the same click/tap that opened it cannot immediately close it (the original instant-close echo).
-// Touch uses a native preventDefault to cancel the compatibility ghost click; Esc + backdrop close.
+// Avatar opens a full-screen zoom (portaled to <body> so no ancestor — .phone overflow:hidden,
+// .card backdrop-filter, transformed .screen — can clip a position:fixed overlay).
+// Mobile best-practice: the modal closes ONLY via the ✕ button or Esc. Tapping the image/backdrop
+// does nothing, so a tap meant to look closer never dismisses it. Touch handlers preventDefault to
+// cancel the compatibility "ghost click".
 export default function PhotoZoom({ url, className }: { url: string; className?: string }) {
   const [open, setOpen] = useState(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
-  const lightboxRef = useRef<HTMLDivElement | null>(null);
-  const armedRef = useRef(false);
 
   const doOpen = useCallback(() => {
-    armedRef.current = false;
     track('photo_zoomed');
     setOpen(true);
   }, []);
   const doClose = useCallback(() => setOpen(false), []);
 
-  // Avatar: native non-passive touchend → preventDefault cancels the compatibility ghost click.
+  // Avatar: native non-passive touchend → preventDefault cancels the ghost click so open is clean.
   useEffect(() => {
     const el = avatarRef.current;
     if (!el) return;
@@ -35,33 +32,14 @@ export default function PhotoZoom({ url, className }: { url: string; className?:
     return () => el.removeEventListener('touchend', onTouchEnd);
   }, [doOpen]);
 
-  // While open: arm the backdrop only after a painted frame; wire Esc + touch-close.
+  // Esc closes (desktop / keyboard).
   useEffect(() => {
     if (!open) return;
-    let r1 = 0;
-    let r2 = 0;
-    r1 = requestAnimationFrame(() => {
-      r2 = requestAnimationFrame(() => {
-        armedRef.current = true;
-      });
-    });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') doClose();
     };
     window.addEventListener('keydown', onKey);
-    const el = lightboxRef.current;
-    const onTouchEnd = (e: TouchEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (armedRef.current) doClose();
-    };
-    el?.addEventListener('touchend', onTouchEnd, { passive: false });
-    return () => {
-      cancelAnimationFrame(r1);
-      cancelAnimationFrame(r2);
-      window.removeEventListener('keydown', onKey);
-      el?.removeEventListener('touchend', onTouchEnd);
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, [open, doClose]);
 
   return (
@@ -87,20 +65,15 @@ export default function PhotoZoom({ url, className }: { url: string; className?:
       {open &&
         typeof document !== 'undefined' &&
         createPortal(
-          <div
-            ref={lightboxRef}
-            className="lightbox"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (armedRef.current) doClose();
-            }}
-          >
+          // Tapping the image/backdrop does NOTHING — close only via ✕ or Esc.
+          <div className="lightbox">
             <button
               type="button"
               className="lightbox-close"
               aria-label="Zatvori"
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={doClose}
+              onTouchEnd={(e) => {
+                e.preventDefault();
                 doClose();
               }}
             >
