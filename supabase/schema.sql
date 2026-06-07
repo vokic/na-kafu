@@ -16,7 +16,7 @@ create table if not exists invites (
   message           text not null,
   places            text[] not null,
   theme             text not null default 'light'
-                      check (theme in ('light','dark','pink','peach','holo','aurora')),
+                      check (theme in ('light','dark','pink','peach','holo','aurora','indigo')),
   status            text not null default 'pending'
                       check (status in ('pending','opened','accepted','declined','cancelled')),
   user_id           uuid,                            -- null in MVP (Phase 2 accounts)

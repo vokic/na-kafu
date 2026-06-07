@@ -7,7 +7,7 @@ import { resizeImage } from '@/lib/image';
 import { track } from '@/lib/analytics';
 import { isValidEmail, type Draft } from './draft';
 
-const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora'];
+const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora', 'indigo'];
 
 export default function BuildScreen({
   draft,

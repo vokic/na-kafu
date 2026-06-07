@@ -10,6 +10,7 @@ const THEME_COLORS: Record<ThemeName, string> = {
   peach: '#FBE4DC',
   holo: '#0a0418',
   aurora: '#0a0418',
+  indigo: '#1B2A6B',
 };
 
 const STORAGE_KEY = 'nakafu:ui-theme';

@@ -19,6 +19,8 @@
   --card:#1A0F28;--btn-bg:#FFB3C7;--btn-fg:#0D0419;--block:#FFB3C7;--block-fg:#0D0419;--accent:#FFB3C7;--accent-on:#0D0419}
 .phone[data-theme="pink"],.brandpane[data-theme="pink"]{--bg:#FFB3C7;--fg:#0D0419;--muted:rgba(13,4,25,.6);--line:rgba(13,4,25,.2);
   --card:#FFFFFF;--btn-bg:#0D0419;--btn-fg:#FFB3C7;--block:#0D0419;--block-fg:#FFB3C7;--accent:#0D0419;--accent-on:#FFB3C7}
+.phone[data-theme="indigo"],.brandpane[data-theme="indigo"]{--bg:#1B2A6B;--fg:#FFFFFF;--muted:rgba(255,255,255,.62);--line:rgba(255,255,255,.20);
+  --card:#2A3B86;--btn-bg:#FFB3C7;--btn-fg:#1B2A6B;--block:#FFB3C7;--block-fg:#1B2A6B;--accent:#FFB3C7;--accent-on:#1B2A6B}
 
 .phone[data-theme="peach"],.brandpane[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#7B97A4;--line:#F0E4DF;
   --card:#FFFFFF;--btn-bg:#FB4E8D;--btn-fg:#FFFFFF;--block:#FF6FA0;--block-fg:#FFFFFF;--accent:#FB4E8D;--accent-on:#FFFFFF;
@@ -110,7 +112,7 @@ body{font-family:var(--font-schibsted),sans-serif;background:#E4E0D7;min-height:
 .tbright{display:flex;align-items:center;gap:12px}
 .themesw{display:flex;gap:6px}
 .sw{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);cursor:pointer;padding:0;transition:.15s}
-.sw.light{background:#FAF5EB}.sw.dark{background:#0D0419}.sw.pink{background:#FFB3C7}.sw.peach{background:linear-gradient(135deg,#FF6FA0,#FFC58A)}.sw.holo{background:conic-gradient(from 0deg,#5a3fe0,#2f7fe0,#1fb0c0,#c23a9e,#ff7a2e,#ffc23f,#5a3fe0)}.sw.aurora{background:conic-gradient(from 0deg,#7a1fd0,#ff1e9c,#ff4d6e,#ff8a18,#ffd23f,#00e6ff,#7a1fd0)}
+.sw.light{background:#FAF5EB}.sw.dark{background:#0D0419}.sw.pink{background:#FFB3C7}.sw.peach{background:linear-gradient(135deg,#FF6FA0,#FFC58A)}.sw.holo{background:conic-gradient(from 0deg,#5a3fe0,#2f7fe0,#1fb0c0,#c23a9e,#ff7a2e,#ffc23f,#5a3fe0)}.sw.aurora{background:conic-gradient(from 0deg,#7a1fd0,#ff1e9c,#ff4d6e,#ff8a18,#ffd23f,#00e6ff,#7a1fd0)}.sw.indigo{background:linear-gradient(90deg,#1B2A6B 0 50%,#FFB3C7 50% 100%)}
 .sw.on{outline:2px solid var(--fg);outline-offset:2px;border-color:transparent}
 .sw:active{transform:scale(.9)}
 .role{font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:1.5px solid var(--line);

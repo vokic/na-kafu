@@ -5,7 +5,7 @@ import { SR } from '@/lib/i18n';
 import { track } from '@/lib/analytics';
 import type { ThemeName } from '@/lib/types';
 
-const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora'];
+const THEMES: ThemeName[] = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora', 'indigo'];
 
 export default function TopBar({
   showThemeSwitcher = true,

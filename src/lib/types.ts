@@ -5,7 +5,7 @@ export type Mode = 'direct' | 'friend';
 // Prototype ships 6 themes. NOTE: HANDOVER §5.2 calls "peach" -> "soft" and omits "aurora".
 // We keep the prototype's literal data-theme values internally (CSS depends on them);
 // the BE schema enum should map peach->soft and add aurora.
-export type ThemeName = 'light' | 'dark' | 'pink' | 'peach' | 'holo' | 'aurora';
+export type ThemeName = 'light' | 'dark' | 'pink' | 'peach' | 'holo' | 'aurora' | 'indigo';
 
 export type InviteStatus = 'pending' | 'opened' | 'accepted' | 'declined' | 'cancelled';
 export type Decision = 'accepted' | 'declined';
