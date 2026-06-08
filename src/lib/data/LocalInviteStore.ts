@@ -111,15 +111,15 @@ export class LocalInviteStore implements InviteStore {
     };
   }
 
-  async getInvite(inviteToken: string): Promise<RecipientView> {
+  async getInvite(inviteToken: string, opts?: { preview?: boolean }): Promise<RecipientView> {
     inviteToken = inviteToken.toLowerCase();
     const invite = this.loadInvite(inviteToken);
     if (!invite) throw new StoreError('NOT_FOUND', 'Pozivnica ne postoji.');
     if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
     if (invite.status === 'cancelled') throw new StoreError('EXPIRED', 'Pozivnica je otkazana.');
 
-    // First open
-    if (invite.status === 'pending') {
+    // First open — skipped in preview (sender viewing their own invite is read-only)
+    if (!opts?.preview && invite.status === 'pending') {
       invite.status = 'opened';
       invite.opened_at = now();
       this.saveInvite(invite);

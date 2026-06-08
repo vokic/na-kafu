@@ -35,16 +35,20 @@ export default function RecipientFlow({ token }: { token: string }) {
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busy, setBusy] = useState(false);
   const [fillSignal, setFillSignal] = useState(0); // ⚡ dev-fill trigger
+  // Preview (?preview=1): sender viewing their own invite — read-only, no responding.
+  const [preview] = useState(
+    () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('preview') === '1',
+  );
 
   useEffect(() => {
     let active = true;
     store
-      .getInvite(token)
+      .getInvite(token, { preview })
       .then((v) => {
         if (!active) return;
         setView(v);
         setTheme(v.theme);
-        track('invite_opened', { mode: v.mode, invite_token: token });
+        if (!preview) track('invite_opened', { mode: v.mode, invite_token: token });
         setStep(v.already_responded ? 'closed' : 'receive');
       })
       .catch((err) => {
@@ -56,11 +60,11 @@ export default function RecipientFlow({ token }: { token: string }) {
     return () => {
       active = false;
     };
-  }, [token, setTheme]);
+  }, [token, setTheme, preview]);
 
   // Mandatory response: warn if the recipient tries to leave before choosing yes/no.
   useEffect(() => {
-    const mustAnswer = step === 'receive' || step === 'reveal' || step === 'accept' || step === 'reject';
+    const mustAnswer = !preview && (step === 'receive' || step === 'reveal' || step === 'accept' || step === 'reject');
     if (!mustAnswer) return;
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -68,7 +72,7 @@ export default function RecipientFlow({ token }: { token: string }) {
     };
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
-  }, [step]);
+  }, [step, preview]);
 
   // route a respond error to the right screen + track it
   function onRespondError(err: unknown) {
@@ -220,6 +224,8 @@ export default function RecipientFlow({ token }: { token: string }) {
           onPrimary={view.mode === 'friend' ? goReveal : startAccept}
           onDecline={startReject}
           busy={busy}
+          preview={preview}
+          onExitPreview={() => router.back()}
         />
       )}
       {step === 'reveal' && reveal && (

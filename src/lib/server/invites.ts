@@ -99,7 +99,7 @@ export async function createInvite(payload: CreateInvitePayload, baseUrl: string
   };
 }
 
-export async function getInvite(token: string): Promise<RecipientView> {
+export async function getInvite(token: string, preview = false): Promise<RecipientView> {
   const sb = supabaseAdmin();
   const { data, error } = await sb.from('invites').select('*').eq('invite_token', token.toLowerCase()).maybeSingle();
   if (error) throw new ApiError('SERVER', error.message);
@@ -107,7 +107,8 @@ export async function getInvite(token: string): Promise<RecipientView> {
   const invite = data as Invite;
   ensureActive(invite);
 
-  if (invite.status === 'pending') {
+  // Preview (sender viewing their own invite) is read-only: don't mark opened or log.
+  if (!preview && invite.status === 'pending') {
     await sb.from('invites').update({ status: 'opened', opened_at: nowIso() }).eq('id', invite.id);
     invite.status = 'opened';
     await logEvent(invite.id, 'link_opened');

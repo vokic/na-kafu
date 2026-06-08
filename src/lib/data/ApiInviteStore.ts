@@ -36,8 +36,9 @@ export class ApiInviteStore implements InviteStore {
     return handle(res);
   }
 
-  async getInvite(token: string): Promise<RecipientView> {
-    const res = await fetch(`/api/invites/${encodeURIComponent(token)}`, { cache: 'no-store' });
+  async getInvite(token: string, opts?: { preview?: boolean }): Promise<RecipientView> {
+    const q = opts?.preview ? '?preview=1' : '';
+    const res = await fetch(`/api/invites/${encodeURIComponent(token)}${q}`, { cache: 'no-store' });
     return handle(res);
   }
 

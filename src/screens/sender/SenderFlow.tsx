@@ -131,7 +131,7 @@ export default function SenderFlow() {
           mode={draft.mode}
           recipientName={draft.to.trim()}
           shareUrl={result.share_url}
-          onPreview={() => router.push(`/p/${result.invite_token}`)}
+          onPreview={() => router.push(`/p/${result.invite_token}?preview=1`)}
           onReset={reset}
         />
       )}

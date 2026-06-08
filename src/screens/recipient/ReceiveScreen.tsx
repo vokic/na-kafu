@@ -10,11 +10,15 @@ export default function ReceiveScreen({
   onPrimary,
   onDecline,
   busy = false,
+  preview = false,
+  onExitPreview,
 }: {
   view: RecipientView;
   onPrimary: () => void; // direct → accept; friend → reveal
   onDecline: () => void;
   busy?: boolean;
+  preview?: boolean; // sender previewing own invite → no accept/decline
+  onExitPreview?: () => void;
 }) {
   const friend = view.mode === 'friend';
   const c = COPY[view.mode];
@@ -57,14 +61,25 @@ export default function ReceiveScreen({
         </div>
       </div>
 
-      <div className="btn-row">
-        <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
-          {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
-        </button>
-        <button className="btn btn-outline" onClick={onDecline}>
-          {SR.recv.decline}
-        </button>
-      </div>
+      {preview ? (
+        <div className="btn-row">
+          <div className="note" style={{ display: 'block', marginTop: 0 }}>
+            {SR.recv.previewNote}
+          </div>
+          <button className="btn btn-ghost" onClick={onExitPreview}>
+            {SR.recv.previewBack}
+          </button>
+        </div>
+      ) : (
+        <div className="btn-row">
+          <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
+            {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
+          </button>
+          <button className="btn btn-outline" onClick={onDecline}>
+            {SR.recv.decline}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

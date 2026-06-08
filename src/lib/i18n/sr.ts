@@ -63,6 +63,8 @@ export const SR = {
     acceptDirect: 'Prihvati',
     decline: 'Odbij, hvala',
     reveal: 'Otkrij ko je',
+    previewNote: 'Ovo je pregled - ovako vidi osoba koju zoveš. Odgovaranje je isključeno.',
+    previewBack: 'Zatvori pregled',
   },
 
   reveal: {

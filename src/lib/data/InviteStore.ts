@@ -26,7 +26,7 @@ export interface InviteStore {
   createInvite(payload: CreateInvitePayload): Promise<CreateInviteResult>;
 
   /** Public recipient read. Friend pre-reveal strips signature/photo. First open -> status 'opened'. */
-  getInvite(inviteToken: string): Promise<RecipientView>;
+  getInvite(inviteToken: string, opts?: { preview?: boolean }): Promise<RecipientView>;
 
   /** Friend mode only. Reveals signature/photo, logs 'revealed'. */
   reveal(inviteToken: string): Promise<RevealResult>;
