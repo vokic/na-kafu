@@ -24,7 +24,6 @@ export default function SentScreen({
 }) {
   const c = COPY[mode];
   const [copied, setCopied] = useState(false);
-  const [manageCopied, setManageCopied] = useState(false);
   const display = shareUrl.replace(/^https?:\/\//, '');
   const manageDisplay = manageUrl.replace(/^https?:\/\//, '');
   // sentLead's only markup is <b>{ime}</b>; render the name as a React child (escaped) instead
@@ -40,16 +39,6 @@ export default function SentScreen({
     setCopied(true);
     track('share_link_copied');
     setTimeout(() => setCopied(false), 1800);
-  }
-
-  async function copyManage() {
-    try {
-      await navigator.clipboard.writeText(manageUrl);
-    } catch {
-      /* clipboard may be blocked */
-    }
-    setManageCopied(true);
-    setTimeout(() => setManageCopied(false), 1800);
   }
 
   return (
@@ -89,24 +78,12 @@ export default function SentScreen({
           {SR.sent.expiryInfo}
         </div>
 
-        <div style={{ marginTop: 18 }}>
-          <label className="label">{SR.sent.manageLabel}</label>
-          <div
-            className="link-box"
-            style={{ display: 'block', textAlign: 'center', borderRadius: 16, padding: '12px 16px', wordBreak: 'break-all', marginTop: 6 }}
-          >
+        <div className="about" style={{ margin: '16px 2px 0', textAlign: 'center' }}>
+          {SR.sent.manageHint}
+          <br />
+          <span style={{ userSelect: 'text', WebkitUserSelect: 'text', wordBreak: 'break-all', opacity: 0.7 }}>
             {manageDisplay}
-          </div>
-          <button
-            className="copy"
-            onClick={copyManage}
-            style={{ width: '100%', marginTop: 8, padding: '13px', borderRadius: 999, fontSize: 14 }}
-          >
-            {manageCopied ? SR.sent.copied : SR.sent.copy}
-          </button>
-          <div className="about" style={{ margin: '8px 2px 0', textAlign: 'center' }}>
-            {SR.sent.manageHint}
-          </div>
+          </span>
         </div>
 
         <AppRating context="sender" />

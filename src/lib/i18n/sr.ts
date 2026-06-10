@@ -68,8 +68,7 @@ export const SR = {
     newOne: 'Napravi novu',
     expiryInfo:
       'Pozivnica važi do sutra u ovo vreme. Ako je tvoja simpatija ne otvori, više neće biti validna i moraćeš da napraviš novu.',
-    manageLabel: 'Tvoj privatni link za praćenje',
-    manageHint: 'Poslali smo ti ga i na mejl. Sačuvaj ga - preko njega pratiš odgovor i možeš da otkažeš poziv.',
+    manageHint: 'Privatni link za praćenje (samo ti) poslali smo ti na mejl - preko njega pratiš odgovor i otkazuješ poziv.',
   },
 
   recv: {
