@@ -11,6 +11,7 @@ export default function ReceiveScreen({
   onDecline,
   busy = false,
   preview = false,
+  error,
   onExitPreview,
 }: {
   view: RecipientView;
@@ -18,6 +19,7 @@ export default function ReceiveScreen({
   onDecline: () => void;
   busy?: boolean;
   preview?: boolean; // sender previewing own invite → no accept/decline
+  error?: string | null;
   onExitPreview?: () => void;
 }) {
   const friend = view.mode === 'friend';
@@ -71,14 +73,21 @@ export default function ReceiveScreen({
           </button>
         </div>
       ) : (
-        <div className="btn-row">
-          <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
-            {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
-          </button>
-          <button className="btn btn-outline" onClick={onDecline}>
-            {SR.recv.decline}
-          </button>
-        </div>
+        <>
+          {error && (
+            <div className="formerror" role="alert">
+              {error}
+            </div>
+          )}
+          <div className="btn-row">
+            <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
+              {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
+            </button>
+            <button className="btn btn-outline" onClick={onDecline}>
+              {SR.recv.decline}
+            </button>
+          </div>
+        </>
       )}
     </section>
   );

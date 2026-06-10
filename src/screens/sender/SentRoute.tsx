@@ -70,6 +70,7 @@ export default function SentRoute() {
         mode={last.mode}
         recipientName={last.to}
         shareUrl={last.share_url}
+        manageUrl={last.manage_url}
         onPreview={() => router.push(`/p/${last.invite_token}?preview=1`)}
         onReset={() => router.push('/')}
       />

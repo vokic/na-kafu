@@ -2,6 +2,19 @@
 import type { Invite, InviteResponse } from '@/lib/types';
 import { sendEmail } from './send';
 
+// Escape user-controlled values before interpolating into email HTML. In friend mode the
+// responder is untrusted, so place/reason/contact/reply/name could carry markup → phishing
+// in an email the sender trusts. URLs (share/manage) are app-generated, not escaped here.
+function esc(value: string | null | undefined): string {
+  if (value == null) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function shell(title: string, bodyHtml: string): string {
   return `<!doctype html><html lang="sr"><body style="margin:0;background:#E4E0D7;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
   <div style="max-width:460px;margin:0 auto;background:#FFFFFF;border-radius:20px;padding:28px 24px;color:#0D0419">
@@ -22,9 +35,10 @@ function buttonGhost(href: string, label: string): string {
 
 export async function sendConfirmationEmail(invite: Invite, shareUrl: string, manageUrl: string): Promise<boolean> {
   const friend = invite.mode === 'friend';
+  const name = esc(invite.recipient_name);
   const how = friend
-    ? `Daj ovaj link <b>drugu od poverenja</b> da ga prosledi osobi <b>${invite.recipient_name}</b>. Ti ostaješ skriven dok ne prihvati.`
-    : `Podeli ovaj link sa <b>${invite.recipient_name}</b> preko Instagrama ili poruke.`;
+    ? `Daj ovaj link <b>drugu od poverenja</b> da ga prosledi osobi <b>${name}</b>. Ti ostaješ skriven dok ne prihvati.`
+    : `Podeli ovaj link sa <b>${name}</b> preko Instagrama ili poruke.`;
   const html = shell(
     'Tvoja pozivnica je spremna.',
     `<p style="font-size:15px;line-height:1.5">${how}</p>
@@ -47,21 +61,22 @@ export async function sendNotificationEmail(
   manageUrl: string,
 ): Promise<boolean> {
   const accepted = response.decision === 'accepted';
+  const name = esc(invite.recipient_name);
   let body: string;
   if (accepted) {
-    const rows = [`<b>Mesto:</b> ${response.place}`];
-    if (response.contact_value) rows.push(`<b>${response.contact_type}:</b> ${response.contact_value}`);
-    if (response.reply_note) rows.push(`<b>Poruka:</b> "${response.reply_note}"`);
-    body = `<p style="font-size:16px;line-height:1.5">${invite.recipient_name} kaže <b>da</b>! 🎉</p>
+    const rows = [`<b>Mesto:</b> ${esc(response.place)}`];
+    if (response.contact_value) rows.push(`<b>${esc(response.contact_type)}:</b> ${esc(response.contact_value)}`);
+    if (response.reply_note) rows.push(`<b>Poruka:</b> "${esc(response.reply_note)}"`);
+    body = `<p style="font-size:16px;line-height:1.5">${name} kaže <b>da</b>! 🎉</p>
             <p style="font-size:15px;line-height:1.6">${rows.join('<br>')}</p>`;
   } else {
-    const rows = [`<b>Razlog:</b> ${response.reason}`];
-    if (response.reason_note) rows.push(`<b>Poruka:</b> "${response.reason_note}"`);
+    const rows = [`<b>Razlog:</b> ${esc(response.reason)}`];
+    if (response.reason_note) rows.push(`<b>Poruka:</b> "${esc(response.reason_note)}"`);
     const hidden = invite.mode === 'friend' ? '<br><br>Ostao si skriven - niko ne zna da si ti pitao.' : '';
     body = `<p style="font-size:16px;line-height:1.5">Ovaj put ne.</p>
             <p style="font-size:15px;line-height:1.6">${rows.join('<br>')}${hidden}</p>`;
   }
-  const html = shell(accepted ? `${invite.recipient_name} ti je odgovorila!` : 'Stigao je odgovor.', `${body}
+  const html = shell(accepted ? `${name} kaže da!` : 'Stigao je odgovor.', `${body}
      <p style="margin-top:16px">${button(manageUrl, 'Vidi detalje')}</p>`);
   return sendEmail({ to: invite.sender_email, subject: accepted ? `${invite.recipient_name} kaže da!` : 'Stigao je odgovor', html });
 }

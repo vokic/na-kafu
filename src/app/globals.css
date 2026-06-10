@@ -22,24 +22,26 @@
 .phone[data-theme="indigo"],.brandpane[data-theme="indigo"]{--bg:#1B2A6B;--fg:#FFFFFF;--muted:rgba(255,255,255,.62);--line:rgba(255,255,255,.20);
   --card:#2A3B86;--btn-bg:#FFB3C7;--btn-fg:#1B2A6B;--block:#FFB3C7;--block-fg:#1B2A6B;--accent:#FFB3C7;--accent-on:#1B2A6B}
 
-.phone[data-theme="peach"],.brandpane[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#7B97A4;--line:#F0E4DF;
+.phone[data-theme="peach"],.brandpane[data-theme="peach"]{--bg:#FBE4DC;--fg:#1C3D4F;--muted:#55707D;--line:#F0E4DF;
   --card:#FFFFFF;--btn-bg:#FB4E8D;--btn-fg:#FFFFFF;--block:#FF6FA0;--block-fg:#FFFFFF;--accent:#FB4E8D;--accent-on:#FFFFFF;
   font-family:var(--font-poppins),sans-serif}
 
 .phone[data-theme="holo"],.brandpane[data-theme="holo"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.66);--line:rgba(255,255,255,.26);
-  --card:rgba(255,255,255,.12);--btn-bg:#FFFFFF;--btn-fg:#1a0820;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:#FFFFFF;--accent-on:#1a0820}
+  --card:rgba(255,255,255,.18);--btn-bg:#FFFFFF;--btn-fg:#1a0820;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:#FFFFFF;--accent-on:#1a0820}
 .phone[data-theme="holo"] .holobg{display:block}
 .phone[data-theme="holo"] .card,.phone[data-theme="holo"] .reveal-card,.phone[data-theme="holo"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
 .phone[data-theme="holo"] .hintbar{backdrop-filter:blur(10px)}
 .phone[data-theme="holo"] h1,.phone[data-theme="holo"] .lead,.phone[data-theme="holo"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
+.phone[data-theme="holo"] .from,.phone[data-theme="holo"] .msg,.phone[data-theme="holo"] .about,.phone[data-theme="holo"] .k,.phone[data-theme="holo"] .v{text-shadow:0 1px 10px rgba(8,2,16,.45)}
 
 /* ===== Aurora skin (animation from holo-animacija) + glass buttons ===== */
 .phone[data-theme="aurora"],.brandpane[data-theme="aurora"]{--bg:#0a0418;--fg:#FFFFFF;--muted:rgba(255,255,255,.68);--line:rgba(255,255,255,.30);
-  --card:rgba(255,255,255,.12);--btn-bg:rgba(255,255,255,.18);--btn-fg:#FFFFFF;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:rgba(255,255,255,.92);--accent-on:#160726}
+  --card:rgba(255,255,255,.18);--btn-bg:rgba(255,255,255,.18);--btn-fg:#FFFFFF;--block:rgba(255,255,255,.20);--block-fg:#FFFFFF;--accent:rgba(255,255,255,.92);--accent-on:#160726}
 .phone[data-theme="aurora"] .aurorabg{display:block}
 .phone[data-theme="aurora"] .card,.phone[data-theme="aurora"] .reveal-card,.phone[data-theme="aurora"] .result-card{backdrop-filter:blur(14px);box-shadow:0 20px 50px -24px rgba(0,0,0,.5)}
 .phone[data-theme="aurora"] .hintbar{backdrop-filter:blur(10px)}
 .phone[data-theme="aurora"] h1,.phone[data-theme="aurora"] .lead,.phone[data-theme="aurora"] .label{text-shadow:0 2px 18px rgba(8,2,16,.4)}
+.phone[data-theme="aurora"] .from,.phone[data-theme="aurora"] .msg,.phone[data-theme="aurora"] .about,.phone[data-theme="aurora"] .k,.phone[data-theme="aurora"] .v{text-shadow:0 1px 10px rgba(8,2,16,.45)}
 /* glass buttons (this skin only) */
 .phone[data-theme="aurora"] .btn-primary{background:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(13px);border:1px solid rgba(255,255,255,.34);box-shadow:0 12px 32px -16px rgba(0,0,0,.55)}
 .phone[data-theme="aurora"] .btn-yes{background:rgba(31,205,176,.3);border-color:rgba(120,255,225,.55)}
@@ -95,7 +97,7 @@
 .phone[data-theme="peach"] .btn-yes{background:#1FCDB0;color:#fff;box-shadow:0 16px 30px -12px rgba(31,205,176,.4)}
 .phone[data-theme="peach"] .chip.sel{box-shadow:0 8px 20px -8px rgba(251,78,141,.35)}
 .phone[data-theme="peach"] .seg button.on{box-shadow:0 8px 16px -8px rgba(251,78,141,.3)}
-.phone[data-theme="peach"] .pill{background:#F6EEEA;color:#7B97A4}
+.phone[data-theme="peach"] .pill{background:#F6EEEA;color:#55707D}
 .phone[data-theme="peach"] .hintbar{background:#FFE6F0;color:#E83C7B}
 .phone[data-theme="peach"] .result-card .v.contact{color:#15B79A}
 
@@ -115,6 +117,10 @@ body{font-family:var(--font-schibsted),sans-serif;background:#E4E0D7;min-height:
 .sw.light{background:#FAF5EB}.sw.dark{background:#0D0419}.sw.pink{background:#FFB3C7}.sw.peach{background:linear-gradient(135deg,#FF6FA0,#FFC58A)}.sw.holo{background:conic-gradient(from 0deg,#5a3fe0,#2f7fe0,#1fb0c0,#c23a9e,#ff7a2e,#ffc23f,#5a3fe0)}.sw.aurora{background:conic-gradient(from 0deg,#7a1fd0,#ff1e9c,#ff4d6e,#ff8a18,#ffd23f,#00e6ff,#7a1fd0)}.sw.indigo{background:linear-gradient(90deg,#1B2A6B 0 50%,#FFB3C7 50% 100%)}
 .sw.on{outline:2px solid var(--fg);outline-offset:2px;border-color:transparent}
 .sw:active{transform:scale(.9)}
+/* Enlarge the tiny (19px) swatch tap target to ~41px without changing its visual size. */
+.sw{position:relative}
+.sw::before{content:"";position:absolute;inset:-11px}
+.themepick .sw::before{inset:-6px}
 .role{font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:1.5px solid var(--line);
   border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
 .role:active{transform:scale(.94)}
@@ -151,12 +157,17 @@ input[type=text],textarea{width:100%;font-family:inherit;font-size:16px;font-wei
 input::placeholder,textarea::placeholder{color:var(--muted)}
 textarea{resize:none;min-height:74px;line-height:1.5;border-radius:22px}
 input:focus,textarea:focus{border-color:var(--fg)}
+/* Keyboard focus indicator (WCAG 2.4.7). Only for keyboard nav, not mouse/touch taps. */
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:4px}
+input:focus-visible,textarea:focus-visible{outline:none}
 
 .chips{display:flex;flex-wrap:wrap;gap:9px}
 .chip{font-family:inherit;font-size:14px;font-weight:600;color:var(--fg);background:transparent;
   border:2px solid var(--line);border-radius:999px;padding:10px 16px;cursor:pointer;transition:.16s}
 .chip:active{transform:scale(.94)}
 .chip.sel{border-color:transparent;background:var(--accent);color:var(--accent-on)}
+.chip:disabled{opacity:.4;cursor:not-allowed}
+.chip:disabled:active{transform:none}
 
 .seg{display:flex;gap:4px;border-radius:999px;padding:4px;border:2px solid var(--line)}
 .seg.modeseg{margin-bottom:8px}
@@ -177,7 +188,7 @@ input:focus,textarea:focus{border-color:var(--fg)}
 .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .lightbox{position:fixed;inset:0;z-index:200;background:rgba(8,2,16,.86);display:flex;align-items:center;justify-content:center;padding:24px;cursor:default;animation:rise .25s ease}
-.lightbox img{max-width:92vw;max-height:88vh;border-radius:18px;object-fit:contain;box-shadow:0 24px 70px -24px rgba(0,0,0,.7)}
+.lightbox img{max-width:92vw;max-height:88dvh;border-radius:18px;object-fit:contain;box-shadow:0 24px 70px -24px rgba(0,0,0,.7)}
 .lightbox-close{position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));z-index:201;
   width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:28px;line-height:1;
   color:#fff;background:rgba(255,255,255,.16);border:none;border-radius:50%;padding:0;cursor:pointer;
@@ -231,6 +242,8 @@ input:focus,textarea:focus{border-color:var(--fg)}
 .result-card .v{font-size:18px;font-weight:700;margin-top:4px}
 .result-card .v.contact{font-size:24px;font-weight:800;color:var(--accent);letter-spacing:-.5px}
 .note{border-radius:14px;padding:12px 15px;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:14px;text-align:center;border:1.5px solid var(--line)}
+.formerror{border-radius:14px;padding:11px 15px;font-size:13.5px;font-weight:600;line-height:1.4;margin-top:14px;text-align:center;color:#B00427;background:rgba(176,4,39,.08);border:1.5px solid rgba(176,4,39,.35)}
+.phone[data-theme="dark"] .formerror,.phone[data-theme="holo"] .formerror,.phone[data-theme="aurora"] .formerror,.phone[data-theme="indigo"] .formerror{color:#FF9FB0;background:rgba(255,99,128,.14);border-color:rgba(255,99,128,.45)}
 .smwrap-c{display:flex;justify-content:center;position:relative}
 #homeHeart{cursor:pointer}
 .egg{position:absolute;top:-12px;left:50%;transform:translate(-50%,-100%) scale(.5);background:var(--accent);color:var(--accent-on);
@@ -248,20 +261,24 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;oversc
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea,button,select{-webkit-appearance:none;appearance:none}
 input,textarea{-webkit-user-select:text;user-select:text}
+/* The share/manage link must be manually selectable — Clipboard API can be blocked, and copy()
+   shows "copied" regardless, so this is the only reliable manual fallback. */
+.link-box{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 /* keep custom focus ring intent; remove iOS inner shadow on inputs */
 input[type=text],textarea{-webkit-appearance:none;appearance:none;border-radius:999px}
 textarea{border-radius:22px}
 img{max-width:100%;display:block}
 
 /* =========================================================================
-   Desktop split (>=900px): left brand pane (per-step heart + caption) + right
-   content pane. Below 900px the stage is transparent and the brandpane hidden,
-   so mobile/tablet render EXACTLY as before (phone is a direct body child).
+   Desktop/tablet split (>=768px): left brand pane (per-step heart + caption) + right
+   content pane. Below 768px the stage is transparent and the brandpane hidden,
+   so phones render EXACTLY as before (phone is a direct body child). The 768px breakpoint
+   means iPad portrait gets the two-pane layout instead of a card floating in dead gray.
    ========================================================================= */
 .stage{display:contents}
 .brandpane{display:none}
 
-@media (min-width:900px){
+@media (min-width:768px){
   /* fixed-height card centered in the viewport; the page itself does NOT scroll (no browser
      scrollbar). Only the inner .screen.on scrolls, with our styled scrollbar. */
   body{padding:24px;overflow:hidden}
@@ -311,6 +328,15 @@ img{max-width:100%;display:block}
   .brandpane[data-theme="aurora"]{background:
     radial-gradient(125% 100% at 50% 32%, rgba(122,31,208,.5), rgba(255,30,156,.26) 46%, rgba(10,4,24,0) 72%),
     radial-gradient(95% 75% at 50% 92%, rgba(0,230,255,.26), transparent 70%), #0a0418}
+}
+
+/* Tablet range (768–899px): the brand pane would crowd the form at the full 340px width,
+   so trim it and the stage height to fit iPad portrait comfortably. */
+@media (min-width:768px) and (max-width:899px){
+  .stage{height:min(820px,94vh)}
+  .brandpane{flex-basis:264px;padding:36px 22px}
+  .brandpane .smoosh{width:132px;height:122px}
+  .brandpane-caption{font-size:17px}
 }
 
 /* =========================================================================

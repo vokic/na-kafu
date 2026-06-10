@@ -11,7 +11,14 @@ import type {
   RevealResult,
 } from '@/lib/types';
 
-export type StoreErrorCode = 'NOT_FOUND' | 'ALREADY_RESPONDED' | 'INVALID' | 'CONFLICT' | 'EXPIRED';
+export type StoreErrorCode =
+  | 'NOT_FOUND'
+  | 'ALREADY_RESPONDED'
+  | 'INVALID'
+  | 'CONFLICT'
+  | 'EXPIRED'
+  | 'RATE_LIMITED'
+  | 'SERVER';
 
 export class StoreError extends Error {
   code: StoreErrorCode;

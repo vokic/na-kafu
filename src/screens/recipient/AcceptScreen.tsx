@@ -20,12 +20,14 @@ export default function AcceptScreen({
   onSubmit,
   onBack,
   busy,
+  error,
   fillSignal = 0,
 }: {
   places: string[];
   onSubmit: (p: AcceptPayload) => void;
   onBack: () => void;
   busy: boolean;
+  error?: string | null;
   fillSignal?: number;
 }) {
   const [place, setPlace] = useState('');
@@ -51,8 +53,8 @@ export default function AcceptScreen({
 
       <div className="stagger" style={{ margin: '0 -24px', padding: '4px 24px 0' }}>
         <div>
-          <label className="label">{SR.accept.placeLabel}</label>
-          <div className="chips">
+          <label className="label" id="a-place-label">{SR.accept.placeLabel}</label>
+          <div className="chips" role="group" aria-labelledby="a-place-label">
             {places.map((p) => (
               <button
                 key={p}
@@ -71,12 +73,18 @@ export default function AcceptScreen({
 
         <div>
           <div>
-            <label className="label">
+            <label className="label" id="a-contact-label">
               {SR.accept.contactLabel} <small>· {SR.accept.opt}</small>
             </label>
-            <div className="seg">
+            <div className="seg" role="group" aria-labelledby="a-contact-label">
               {CONTACTS.map((ct) => (
-                <button key={ct} type="button" className={contactType === ct ? 'on' : ''} onClick={() => setContactType(ct)}>
+                <button
+                  key={ct}
+                  type="button"
+                  aria-pressed={contactType === ct}
+                  className={contactType === ct ? 'on' : ''}
+                  onClick={() => setContactType(ct)}
+                >
                   {SR.accept.contactShort[ct]}
                 </button>
               ))}
@@ -84,21 +92,34 @@ export default function AcceptScreen({
           </div>
           <div style={{ marginTop: 10 }}>
             <input
+              id="a-contact-value"
               type="text"
+              aria-label={SR.accept.contactLabel}
               value={contactVal}
               placeholder={SR.accept.placeholders[contactType]}
               onChange={(e) => setContactVal(e.target.value)}
             />
           </div>
+          {!contactVal.trim() && (
+            <div className="about" style={{ margin: '8px 2px 0' }}>
+              {SR.accept.noContactNote}
+            </div>
+          )}
         </div>
 
         <div>
-          <label className="label">
+          <label className="label" htmlFor="a-reply">
             {SR.accept.replyLabel} <small>· {SR.accept.opt}</small>
           </label>
-          <textarea value={reply} placeholder={SR.accept.replyPlaceholder} onChange={(e) => setReply(e.target.value)} />
+          <textarea id="a-reply" value={reply} placeholder={SR.accept.replyPlaceholder} onChange={(e) => setReply(e.target.value)} />
         </div>
       </div>
+
+      {error && (
+        <div className="formerror" role="alert">
+          {error}
+        </div>
+      )}
 
       <div className="btn-row">
         <button

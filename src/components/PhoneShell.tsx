@@ -28,9 +28,9 @@ export default function PhoneShell({
     <div className="stage">
       {aside}
       <div className="phone" data-theme={theme}>
-        <SvgDefs />
-        <HoloBg />
-        <AuroraBg />
+        <SvgDefs theme={theme} />
+        {theme === 'holo' && <HoloBg />}
+        {theme === 'aurora' && <AuroraBg />}
         <TopBar showThemeSwitcher={showThemeSwitcher} right={topRight} />
         {children}
         {onDevFill && (

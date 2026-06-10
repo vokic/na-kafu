@@ -65,9 +65,14 @@ export class LocalInviteStore implements InviteStore {
   async createInvite(payload: CreateInvitePayload): Promise<CreateInviteResult> {
     const places = payload.places ?? [];
     if (places.length < 2 || places.length > 4) {
-      throw new StoreError('INVALID', 'Izaberi 2–4 mesta.');
+      throw new StoreError('INVALID', 'Izaberi 2-4 mesta.');
     }
-    if (!payload.recipient_name?.trim() || !payload.message?.trim() || !payload.sender_signature?.trim()) {
+    if (
+      !payload.recipient_name?.trim() ||
+      !payload.message?.trim() ||
+      !payload.sender_signature?.trim() ||
+      !payload.sender_email?.trim()
+    ) {
       throw new StoreError('INVALID', 'Nedostaju obavezna polja.');
     }
 
@@ -174,15 +179,17 @@ export class LocalInviteStore implements InviteStore {
     if (this.expired(invite)) throw new StoreError('EXPIRED', 'Pozivnica je istekla.');
     if (invite.status === 'cancelled') throw new StoreError('EXPIRED', 'Pozivnica je otkazana.');
 
-    const existing = readJSON<InviteResponse>(KEYS.response(inviteToken));
-    if (existing) throw new StoreError('ALREADY_RESPONDED', 'Već je odgovoreno.');
-
+    // Validate the payload before the existing-response check, to match the server's order
+    // (otherwise the same bad request yields different error codes across the two stores).
     if (payload.decision === 'accepted' && !payload.place) {
       throw new StoreError('INVALID', 'Izaberi mesto.');
     }
     if (payload.decision === 'declined' && !payload.reason) {
       throw new StoreError('INVALID', 'Razlog je obavezan.');
     }
+
+    const existing = readJSON<InviteResponse>(KEYS.response(inviteToken));
+    if (existing) throw new StoreError('ALREADY_RESPONDED', 'Već je odgovoreno.');
 
     const response: InviteResponse = {
       id: generateId(),
@@ -220,7 +227,7 @@ export class LocalInviteStore implements InviteStore {
     const response = readJSON<InviteResponse>(KEYS.response(inviteToken));
     const events = this.loadEvents(inviteToken);
 
-    return { invite, response, events };
+    return { invite, response, events, share_url: buildShareUrl(inviteToken) };
   }
 
   async cancelInvite(manageToken: string): Promise<void> {

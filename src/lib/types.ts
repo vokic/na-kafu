@@ -5,7 +5,11 @@ export type Mode = 'direct' | 'friend';
 // Prototype ships 6 themes. NOTE: HANDOVER §5.2 calls "peach" -> "soft" and omits "aurora".
 // We keep the prototype's literal data-theme values internally (CSS depends on them);
 // the BE schema enum should map peach->soft and add aurora.
-export type ThemeName = 'light' | 'dark' | 'pink' | 'peach' | 'holo' | 'aurora' | 'indigo';
+// Single source of truth: the runtime allowlist (server validation + theme picker) and the
+// ThemeName type both derive from THEMES, so they can't drift. Must match the DB check
+// constraint in supabase/schema.sql.
+export const THEMES = ['light', 'dark', 'pink', 'peach', 'holo', 'aurora', 'indigo'] as const;
+export type ThemeName = (typeof THEMES)[number];
 
 export type InviteStatus = 'pending' | 'opened' | 'accepted' | 'declined' | 'cancelled';
 export type Decision = 'accepted' | 'declined';
@@ -116,4 +120,5 @@ export interface ManageView {
   invite: Invite;
   response: InviteResponse | null;
   events: InviteEvent[];
+  share_url: string; // server-built (header-aware) — display this so it matches the emailed link
 }

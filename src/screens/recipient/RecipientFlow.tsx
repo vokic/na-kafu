@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PhoneShell from '@/components/PhoneShell';
 import BrandAside from '@/components/BrandAside';
@@ -34,6 +34,7 @@ export default function RecipientFlow({ token }: { token: string }) {
   const [reveal, setReveal] = useState<RevealResult | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [fillSignal, setFillSignal] = useState(0); // ⚡ dev-fill trigger
   // Preview (?preview=1): sender viewing their own invite — read-only, no responding.
   const [preview] = useState(
@@ -80,20 +81,27 @@ export default function RecipientFlow({ token }: { token: string }) {
     track('respond_failed', { code, invite_token: token });
     if (code === 'EXPIRED') setStep('expired');
     else if (code === 'ALREADY_RESPONDED') setStep('closed');
-    else console.error(err);
+    else {
+      console.error(err);
+      // INVALID / NOT_FOUND / CONFLICT / SERVER / network: stay on the screen, show inline error.
+      setError(err instanceof StoreError ? err.message : SR.errors.generic);
+    }
   }
 
   const startAccept = () => {
     track('accept_started', { invite_token: token });
+    setError(null);
     setStep('accept');
   };
   const startReject = () => {
     track('reject_started', { invite_token: token });
+    setError(null);
     setStep('reject');
   };
 
-  const goReveal = useCallback(async () => {
+  async function goReveal() {
     setBusy(true);
+    setError(null);
     try {
       const r = await store.reveal(token);
       track('reveal_clicked', { invite_token: token });
@@ -104,11 +112,11 @@ export default function RecipientFlow({ token }: { token: string }) {
     } finally {
       setBusy(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }
 
   async function submitAccept(p: AcceptPayload) {
     setBusy(true);
+    setError(null);
     try {
       await store.respond(token, {
         decision: 'accepted',
@@ -139,6 +147,7 @@ export default function RecipientFlow({ token }: { token: string }) {
 
   async function submitReject(p: RejectPayload) {
     setBusy(true);
+    setError(null);
     try {
       await store.respond(token, { decision: 'declined', reason: p.reason, reason_note: p.reason_note || undefined });
       track('invite_declined', { mode: view?.mode, reason: p.reason, has_note: !!p.reason_note, invite_token: token });
@@ -213,7 +222,13 @@ export default function RecipientFlow({ token }: { token: string }) {
         <InfoScreen
           key="closed"
           title={SR.alreadyResponded.title}
-          sub={SR.alreadyResponded.sub}
+          sub={
+            view?.decision === 'accepted'
+              ? SR.alreadyResponded.subAccepted
+              : view?.decision === 'declined'
+                ? SR.alreadyResponded.subDeclined
+                : SR.alreadyResponded.sub
+          }
           cta={{ label: SR.alreadyResponded.cta, onClick: () => router.push('/') }}
         />
       )}
@@ -225,6 +240,7 @@ export default function RecipientFlow({ token }: { token: string }) {
           onDecline={startReject}
           busy={busy}
           preview={preview}
+          error={error}
           onExitPreview={() => router.back()}
         />
       )}
@@ -238,11 +254,12 @@ export default function RecipientFlow({ token }: { token: string }) {
           onSubmit={submitAccept}
           onBack={() => setStep(view.mode === 'friend' ? 'reveal' : 'receive')}
           busy={busy}
+          error={error}
           fillSignal={fillSignal}
         />
       )}
       {step === 'reject' && (
-        <RejectScreen key="reject" onSubmit={submitReject} onBack={() => setStep('receive')} busy={busy} fillSignal={fillSignal} />
+        <RejectScreen key="reject" onSubmit={submitReject} onBack={() => setStep('receive')} busy={busy} error={error} fillSignal={fillSignal} />
       )}
       {step === 'result' && outcome && (
         <ResultScreen

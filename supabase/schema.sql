@@ -84,4 +84,22 @@ alter default privileges in schema public grant all on sequences to service_role
 --   alter table invites drop constraint if exists invites_status_check;
 --   alter table invites add constraint invites_status_check
 --     check (status in ('pending','opened','accepted','declined','cancelled'));
+--
+-- MIGRATION (run on a live DB created before the 'aurora'/'indigo' themes were added —
+-- otherwise inserts with those themes fail the check constraint with a 500):
+--   alter table invites drop constraint if exists invites_theme_check;
+--   alter table invites add constraint invites_theme_check
+--     check (theme in ('light','dark','pink','peach','holo','aurora','indigo'));
+-- ---------------------------------------------------------------------------
+
+-- ---------------------------------------------------------------------------
+-- RETENTION (privacy: HANDOVER §9 — auto-delete PII after the link's life). Invites carry
+-- an `expires_at` (24h); a daily job removes expired rows. responses/events cascade via FK.
+-- Storage photos are deleted by the app's retention path; this clears the DB side.
+-- Requires pg_cron (Supabase: enable the extension, then run once):
+--   create extension if not exists pg_cron;
+--   select cron.schedule('purge-expired-invites', '0 4 * * *', $$
+--     delete from invites where expires_at < now() - interval '7 days';
+--   $$);
+-- (7-day grace keeps a short audit window past expiry; tighten/loosen as needed.)
 -- ---------------------------------------------------------------------------

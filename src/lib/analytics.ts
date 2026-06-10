@@ -26,11 +26,30 @@ export function initAnalytics(): void {
   started = true;
 }
 
+// Opaque, non-reversible id for funnelling without sending the secret invite_token (which is
+// the public URL component). Same token → same ref, so open→copy→respond still funnels.
+function hashToken(token: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < token.length; i++) {
+    h ^= token.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36);
+}
+
+// Replace invite_token (the secret URL) with an opaque invite_ref, upholding the metadata-only
+// contract. Done centrally so call sites can keep passing invite_token.
+function sanitizeProps(props?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!props || !('invite_token' in props)) return props;
+  const { invite_token, ...rest } = props;
+  return typeof invite_token === 'string' ? { ...rest, invite_ref: hashToken(invite_token) } : rest;
+}
+
 export function track(event: string, props?: Record<string, unknown>): void {
   if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
   if (!started) initAnalytics();
   if (!started) return;
-  posthog.capture(event, props);
+  posthog.capture(event, sanitizeProps(props));
 }
 
 // Explicit pageview (capture_pageview is off). Called on first load + every route change so

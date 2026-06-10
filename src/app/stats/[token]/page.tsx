@@ -41,10 +41,18 @@ function Card({ title, t }: { title: string; t: Totals }) {
       <div style={{ ...C.row, borderTop: '1px solid rgba(255,255,255,.12)', marginTop: 6, paddingTop: 8 }}>
         <span>Open rate</span><b>{pct(t.openRate)}</b>
       </div>
+      <div style={C.row}><span>Respond rate</span><b>{pct(t.respondRate)}</b></div>
       <div style={C.row}><span>Accept rate</span><b>{pct(t.acceptRate)}</b></div>
     </div>
   );
 }
+
+const fmtDur = (min: number | null) => {
+  if (min == null) return '—';
+  if (min < 60) return `${min} min`;
+  if (min < 1440) return `${Math.round(min / 60)} h`;
+  return `${Math.round(min / 1440)} d`;
+};
 
 export default async function StatsPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
@@ -82,6 +90,60 @@ export default async function StatsPage({ params }: { params: Promise<{ token: s
         </div>
 
         <div style={C.section}>
+          <h2 style={C.sectionTitle}>Vreme do akcije (30 dana)</h2>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ ...C.card, flex: 1 }}>
+              <div style={C.cardLabel}>Poslato → otvoreno</div>
+              <div style={{ fontSize: 22, fontWeight: 800, marginTop: 6 }}>{fmtDur(s.avgTimeToOpenMin)}</div>
+            </div>
+            <div style={{ ...C.card, flex: 1 }}>
+              <div style={C.cardLabel}>Otvoreno → odgovor</div>
+              <div style={{ fontSize: 22, fontWeight: 800, marginTop: 6 }}>{fmtDur(s.avgTimeToRespondMin)}</div>
+            </div>
+          </div>
+        </div>
+
+        {s.declineReasons.length > 0 && (
+          <div style={C.section}>
+            <h2 style={C.sectionTitle}>Razlozi odbijanja (30 dana)</h2>
+            <table style={C.table}>
+              <tbody>
+                {s.declineReasons.map((r) => (
+                  <tr key={r.reason}>
+                    <td style={C.td}>{r.reason}</td>
+                    <td style={{ ...C.td, textAlign: 'right', width: 60 }}><b>{r.count}</b></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <div style={C.section}>
+          <h2 style={C.sectionTitle}>Ocene aplikacije</h2>
+          <div style={{ display: 'flex', gap: 20, fontSize: 15, marginBottom: 10 }}>
+            <span>👍 <b>{s.feedback.up}</b></span>
+            <span>👎 <b>{s.feedback.down}</b></span>
+          </div>
+          {s.feedback.recent.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {s.feedback.recent.map((f, i) => (
+                <div key={i} style={C.card}>
+                  <div style={{ fontSize: 14 }}>
+                    {f.value === 'up' ? '👍' : '👎'} {f.comment}
+                  </div>
+                  <div style={{ ...C.muted, marginTop: 4 }}>
+                    {f.context ?? '—'} · {new Date(f.created_at).toLocaleString('sr-RS')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p style={C.muted}>Još nema komentara.</p>
+          )}
+        </div>
+
+        <div style={C.section}>
           <h2 style={C.sectionTitle}>Po danu (30 dana)</h2>
           <table style={C.table}>
             <thead>
@@ -100,9 +162,9 @@ export default async function StatsPage({ params }: { params: Promise<{ token: s
         </div>
 
         <p style={{ ...C.muted, marginTop: 24 }}>
-          Generisano: {new Date(s.generatedAt).toLocaleString('sr-RS')} · datumi su UTC. Posete naslovne
-          strane (landing) prati PostHog ($pageview); ovde je tok od kreiranja: poslato → otvoreno →
-          odgovor.
+          Generisano: {new Date(s.generatedAt).toLocaleString('sr-RS')} · datumi su po vremenu u Srbiji
+          (Europe/Belgrade). Posete naslovne strane (landing) prati PostHog ($pageview); ovde je tok od
+          kreiranja: poslato → otvoreno → odgovor.
         </p>
       </>
     );

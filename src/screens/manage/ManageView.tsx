@@ -11,7 +11,6 @@ import { useTheme } from '@/state/ThemeProvider';
 import { store } from '@/lib/data';
 import { track } from '@/lib/analytics';
 import { SR } from '@/lib/i18n';
-import { buildShareUrl } from '@/lib/data/urls';
 import type { ManageView as ManageData } from '@/lib/types';
 
 function fmtTime(iso: string): string {
@@ -107,7 +106,7 @@ export default function ManageView({ token }: { token: string }) {
   const isCancelled = invite.status === 'cancelled';
   const cancellable = invite.status === 'pending' || invite.status === 'opened';
   const statusLabel = SR.manage.statusLabels[invite.status] ?? invite.status;
-  const shareDisplay = buildShareUrl(invite.invite_token).replace(/^https?:\/\//, '');
+  const shareDisplay = data.share_url.replace(/^https?:\/\//, '');
 
   const manageAside = accepted ? (
     <BrandAside icon={<CheckIcon size={78} />} caption={SR.aside.manage} />
@@ -244,9 +243,15 @@ export default function ManageView({ token }: { token: string }) {
             <button
               className="copy"
               onClick={() => {
-                navigator.clipboard?.writeText(buildShareUrl(invite.invite_token)).catch(() => {});
-                setCopied(true);
-                setTimeout(() => setCopied(false), 1800);
+                // Only show "Kopirano" on actual success — a failed/blocked clipboard write
+                // shouldn't claim it copied.
+                navigator.clipboard
+                  ?.writeText(data.share_url)
+                  .then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 1800);
+                  })
+                  .catch(() => {});
               }}
             >
               {copied ? SR.sent.copied : SR.sent.copy}

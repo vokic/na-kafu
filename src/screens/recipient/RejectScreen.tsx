@@ -14,11 +14,13 @@ export default function RejectScreen({
   onSubmit,
   onBack,
   busy,
+  error,
   fillSignal = 0,
 }: {
   onSubmit: (p: RejectPayload) => void;
   onBack: () => void;
   busy: boolean;
+  error?: string | null;
   fillSignal?: number;
 }) {
   const [reason, setReason] = useState('');
@@ -40,22 +42,34 @@ export default function RejectScreen({
 
       <div className="stagger" style={{ marginTop: 4 }}>
         <div>
-          <label className="label">{SR.reject.reasonLabel}</label>
-          <div className="chips">
+          <label className="label" id="r-reason-label">{SR.reject.reasonLabel}</label>
+          <div className="chips" role="group" aria-labelledby="r-reason-label">
             {SR.reasons.map((r) => (
-              <button key={r} type="button" className={`chip${reason === r ? ' sel' : ''}`} onClick={() => setReason(r)}>
+              <button
+                key={r}
+                type="button"
+                aria-pressed={reason === r}
+                className={`chip${reason === r ? ' sel' : ''}`}
+                onClick={() => setReason(r)}
+              >
                 {r}
               </button>
             ))}
           </div>
         </div>
         <div>
-          <label className="label">
+          <label className="label" htmlFor="r-note">
             {SR.reject.noteLabel} <small>· {SR.accept.opt}</small>
           </label>
-          <textarea value={note} placeholder={SR.reject.notePlaceholder} onChange={(e) => setNote(e.target.value)} />
+          <textarea id="r-note" value={note} placeholder={SR.reject.notePlaceholder} onChange={(e) => setNote(e.target.value)} />
         </div>
       </div>
+
+      {error && (
+        <div className="formerror" role="alert">
+          {error}
+        </div>
+      )}
 
       <div className="btn-row">
         <button

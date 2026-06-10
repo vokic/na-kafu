@@ -27,11 +27,13 @@ export default function SenderFlow() {
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [result, setResult] = useState<CreateInviteResult | null>(null);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const update = useCallback((patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch })), []);
 
   async function submit() {
     setBusy(true);
+    setError(null);
     track('invite_create_attempted');
     try {
       const res = await store.createInvite({
@@ -67,6 +69,7 @@ export default function SenderFlow() {
       setStep('sent');
     } catch (err) {
       console.error(err);
+      setError(err instanceof StoreError ? err.message : SR.errors.generic);
       track('invite_create_failed', { code: err instanceof StoreError ? err.code : 'UNKNOWN' });
     } finally {
       setBusy(false);
@@ -115,6 +118,7 @@ export default function SenderFlow() {
           key="build"
           draft={draft}
           onChange={update}
+          error={error}
           onBack={() => {
             track('build_abandoned', {
               had_input: !!(draft.to || draft.msg || draft.from || draft.email || draft.about || draft.photo || draft.places.length),
@@ -131,6 +135,7 @@ export default function SenderFlow() {
           mode={draft.mode}
           recipientName={draft.to.trim()}
           shareUrl={result.share_url}
+          manageUrl={result.manage_url}
           onPreview={() => router.push(`/p/${result.invite_token}?preview=1`)}
           onReset={reset}
         />

@@ -5,16 +5,18 @@ import './globals.css';
 
 // Self-hosted via next/font → identical glyphs across iOS/Android/Samsung.
 // latin-ext carries č ć š ž đ.
+// Only the weights the CSS actually uses (500/600/700/800) — drops unused 400/900.
 const schibsted = Schibsted_Grotesk({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['500', '600', '700', '800'],
   variable: '--font-schibsted',
   display: 'swap',
 });
 
+// Peach theme only; same weight set as the shared CSS.
 const poppins = Poppins({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['500', '600', '700', '800'],
   variable: '--font-poppins',
   display: 'swap',
 });

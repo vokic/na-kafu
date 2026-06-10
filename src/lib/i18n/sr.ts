@@ -1,6 +1,8 @@
 // Serbian copy inventory (HANDOVER §5.8). Single source of strings; locale-ready.
 // Structural markup (line breaks, accent <span>) lives in components; plain text lives here.
 
+import type { InviteStatus, EventType, ThemeName } from '@/lib/types';
+
 export const SR = {
   brand: 'na kafu?',
 
@@ -27,7 +29,16 @@ export const SR = {
   },
 
   build: {
-    mode: { direct: 'Šaljem sam', friend: 'Preko druga' },
+    mode: { direct: 'Šaljem sam', friend: 'Preko druga', groupLabel: 'Kako šalješ pozivnicu' },
+    themeNames: {
+      light: 'Svetla',
+      dark: 'Tamna',
+      pink: 'Roze',
+      peach: 'Breskva',
+      holo: 'Holo',
+      aurora: 'Aurora',
+      indigo: 'Indigo',
+    } as Record<ThemeName, string>,
     heading: { l1: 'Za', l2: 'koga?' },
     fields: {
       name: 'Ime ili nadimak',
@@ -57,6 +68,8 @@ export const SR = {
     newOne: 'Napravi novu',
     expiryInfo:
       'Pozivnica važi do sutra u ovo vreme. Ako je tvoja simpatija ne otvori, više neće biti validna i moraćeš da napraviš novu.',
+    manageLabel: 'Tvoj privatni link za praćenje',
+    manageHint: 'Poslali smo ti ga i na mejl. Sačuvaj ga - preko njega pratiš odgovor i možeš da otkažeš poziv.',
   },
 
   recv: {
@@ -82,6 +95,7 @@ export const SR = {
     submit: 'Pošalji odgovor',
     back: 'Nazad',
     opt: 'opciono',
+    noContactNote: 'Bez kontakta te ne mogu sami naći - ostavi bar jedan način da ti se jave.',
     contactShort: { Instagram: 'Insta', Telefon: 'Tel', Email: 'Email', Snapchat: 'Snap' } as Record<string, string>,
     placeholders: {
       Instagram: '@tvoj_nalog',
@@ -103,9 +117,9 @@ export const SR = {
   result: {
     declineTitle: 'Ovaj put ne.',
     acceptTitleSuffix: 'kaže da!', // "{ime} kaže da!"
-    labels: { place: 'Mesto', contact: '', reason: 'Razlog', note: 'Poruka', herMessage: 'Njena poruka' },
+    labels: { place: 'Mesto', contact: '', reason: 'Razlog', note: 'Poruka', herMessage: 'Poruka nazad' },
     friendHidden: 'Ostao si skriven - niko ne zna da si ti pitao.',
-    friendRevealedNoContact: 'Otkrila je ko si - javiće ti se, ili vas drug spoji.',
+    friendRevealedNoContact: 'Sad zna ko si - javiće ti se, ili vas drug spoji.',
     newInvite: 'Napravi novu pozivnicu',
   },
 
@@ -121,7 +135,7 @@ export const SR = {
     acceptTitle: 'Poslato!',
     declineTitle: 'Poslato.',
     acceptNote: 'Prosledili smo tvoj odgovor.',
-    declineNote: 'Hvala što si odgovorila lepo.',
+    declineNote: 'Hvala na lepom odgovoru.',
     ownCta: 'I ti pozovi nekoga',
     placeChosen: 'Tvoj izbor',
   },
@@ -145,20 +159,20 @@ export const SR = {
       accepted: 'Prihvaćeno',
       declined: 'Odbijeno',
       cancelled: 'Otkazano',
-    } as Record<string, string>,
+    } as Record<InviteStatus, string>,
   },
 
   events: {
     created: 'Pozivnica napravljena',
     link_opened: 'Link otvoren',
-    revealed: 'Otkrila je ko si',
-    accepted: 'Prihvatila je',
-    declined: 'Odbila je',
+    revealed: 'Otkriveno ko si',
+    accepted: 'Prihvaćeno',
+    declined: 'Odbijeno',
     cancelled: 'Pozivnica otkazana',
     email_sent: 'Mejl poslat',
     email_failed: 'Mejl nije poslat',
     reported: 'Prijavljeno',
-  } as Record<string, string>,
+  } as Record<EventType, string>,
 
   notFound: {
     title: 'Pozivnica ne postoji.',
@@ -175,10 +189,18 @@ export const SR = {
   alreadyResponded: {
     title: 'Već je odgovoreno.',
     sub: 'Na ovu pozivnicu je već dat odgovor.',
+    subAccepted: 'Već si prihvatio/la ovu pozivnicu.',
+    subDeclined: 'Već si odbio/la ovu pozivnicu.',
     cta: 'I ti pozovi nekoga',
   },
 
   loading: 'Učitavanje',
+
+  errors: {
+    generic: 'Nešto nije uspelo. Pokušaj ponovo.',
+    network: 'Nema veze sa internetom. Proveri konekciju i pokušaj ponovo.',
+    retry: 'Pokušaj ponovo',
+  },
 
   reasons: [
     'Već sam zauzet/a',

@@ -1,19 +1,13 @@
-// Document-global SVG defs referenced from CSS/markup. Mounted exactly once per
-// page inside PhoneShell. Attributes are JSX-camelCased; otherwise verbatim from
-// the prototype (#heartclip, #liquid, #liquid2 — incl. the SMIL <animate> children).
+// Document-global SVG filter defs for the animated glass themes. Mounted inside PhoneShell.
+// Only rendered for the theme that actually references them (#liquid → holo, #liquid2 →
+// aurora) so the indefinite SMIL <animate> children don't run on the 5 static themes.
+// #heartclip from the prototype is dropped — the app uses a CSS mask instead (globals.css).
+import type { ThemeName } from '@/lib/types';
 
-export default function SvgDefs() {
-  return (
-    <>
-      <svg width="0" height="0" aria-hidden="true" style={{ position: 'absolute' }}>
-        <defs>
-          <clipPath id="heartclip" clipPathUnits="objectBoundingBox">
-            <path d="M0.5,0.97 C0.18,0.72 0,0.46 0,0.28 C0,0.1 0.14,0 0.28,0 C0.4,0 0.47,0.07 0.5,0.17 C0.53,0.07 0.6,0 0.72,0 C0.86,0 1,0.1 1,0.28 C1,0.46 0.82,0.72 0.5,0.97 Z" />
-          </clipPath>
-        </defs>
-      </svg>
-
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
+export default function SvgDefs({ theme }: { theme: ThemeName }) {
+  if (theme === 'holo') {
+    return (
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <defs>
           <filter id="liquid">
             <feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves={2} seed={6} result="n">
@@ -30,8 +24,12 @@ export default function SvgDefs() {
           </filter>
         </defs>
       </svg>
+    );
+  }
 
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
+  if (theme === 'aurora') {
+    return (
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <defs>
           <filter id="liquid2">
             <feTurbulence type="fractalNoise" baseFrequency="0.006 0.009" numOctaves={2} seed={4} result="n">
@@ -46,6 +44,8 @@ export default function SvgDefs() {
           </filter>
         </defs>
       </svg>
-    </>
-  );
+    );
+  }
+
+  return null;
 }
