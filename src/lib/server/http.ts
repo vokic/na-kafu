@@ -29,13 +29,21 @@ export class ApiError extends Error {
   }
 }
 
+const GENERIC_SERVER_ERROR = 'Greška na serveru. Pokušaj ponovo.';
+
 export function errorResponse(e: unknown): NextResponse {
   if (e instanceof ApiError) {
+    // SERVER messages wrap raw driver/DB details (constraint names, schema) — log them
+    // for ourselves, never send them to the client. Other codes carry curated Serbian
+    // copy meant for the user and pass through.
+    if (e.code === 'SERVER') {
+      console.error('[api] server error', e.message);
+      return NextResponse.json({ error: GENERIC_SERVER_ERROR, code: 'SERVER' }, { status: 500 });
+    }
     return NextResponse.json({ error: e.message, code: e.code }, { status: STATUS[e.code] });
   }
   console.error('[api] unhandled', e);
-  const message = e instanceof Error ? e.message : 'Greška na serveru.';
-  return NextResponse.json({ error: message, code: 'SERVER' }, { status: 500 });
+  return NextResponse.json({ error: GENERIC_SERVER_ERROR, code: 'SERVER' }, { status: 500 });
 }
 
 // Absolute base URL for building share/manage links (and email links).

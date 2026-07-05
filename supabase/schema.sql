@@ -5,7 +5,7 @@ create extension if not exists pgcrypto;
 
 create table if not exists invites (
   id                uuid primary key default gen_random_uuid(),
-  invite_token      text unique not null,           -- short public token (e.g. "kqmxzp")
+  invite_token      text unique not null,           -- short public token (e.g. "kafu-mila")
   manage_token      text unique not null,           -- long private token (sender's status link)
   mode              text not null check (mode in ('direct','friend')),
   sender_email      text not null,
@@ -90,6 +90,51 @@ alter default privileges in schema public grant all on sequences to service_role
 --   alter table invites drop constraint if exists invites_theme_check;
 --   alter table invites add constraint invites_theme_check
 --     check (theme in ('light','dark','pink','peach','holo','aurora','indigo'));
+-- ---------------------------------------------------------------------------
+
+-- ---------------------------------------------------------------------------
+-- RATE LIMITING (distributed, fixed window per key). The API calls rate_limit_check()
+-- with a JSONB array of {key, limit, window_s} checks in ONE roundtrip; the upsert takes
+-- a row lock per key, so concurrent serverless instances count correctly (unlike the old
+-- in-memory Map, which reset on every cold start). Stale rows are swept by the retention
+-- job. On a live DB: copy this whole block into the SQL Editor and run it once.
+
+create table if not exists rate_limits (
+  key          text primary key,
+  count        int not null,
+  window_start timestamptz not null
+);
+
+alter table rate_limits enable row level security;  -- no policies → service role only
+grant all privileges on rate_limits to service_role;
+
+create or replace function rate_limit_check(checks jsonb)
+returns boolean
+language plpgsql
+as $$
+declare
+  c jsonb;
+  hit int;
+  limited boolean := false;
+begin
+  for c in select * from jsonb_array_elements(checks) loop
+    insert into rate_limits as rl (key, count, window_start)
+    values (c->>'key', 1, now())
+    on conflict (key) do update set
+      count        = case when rl.window_start < now() - make_interval(secs => (c->>'window_s')::int)
+                          then 1 else rl.count + 1 end,
+      window_start = case when rl.window_start < now() - make_interval(secs => (c->>'window_s')::int)
+                          then now() else rl.window_start end
+    returning rl.count into hit;
+    if hit > (c->>'limit')::int then limited := true; end if;
+  end loop;
+  return limited;
+end $$;
+
+-- Invoker security: even if someone reached the function, RLS (no policies) blocks anon
+-- at the table; execute is revoked anyway. Only our server (service role) can call it.
+revoke execute on function rate_limit_check(jsonb) from public, anon, authenticated;
+grant execute on function rate_limit_check(jsonb) to service_role;
 -- ---------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------

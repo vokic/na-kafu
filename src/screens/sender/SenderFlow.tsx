@@ -111,7 +111,7 @@ export default function SenderFlow() {
     );
 
   return (
-    <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={devFill} aside={aside}>
+    <PhoneShell showThemeSwitcher topRight={devDemo} onDevFill={isDev ? devFill : undefined} aside={aside}>
       {step === 'home' && <HomeScreen key="home" onStart={() => setStep('build')} />}
       {step === 'build' && (
         <BuildScreen

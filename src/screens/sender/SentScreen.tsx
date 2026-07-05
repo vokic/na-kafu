@@ -33,12 +33,12 @@ export default function SentScreen({
   async function copy() {
     try {
       await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      track('share_link_copied');
+      setTimeout(() => setCopied(false), 1800);
     } catch {
-      /* clipboard may be blocked — button still gives feedback */
+      /* clipboard blocked — don't claim "Kopirano" when nothing was copied */
     }
-    setCopied(true);
-    track('share_link_copied');
-    setTimeout(() => setCopied(false), 1800);
   }
 
   return (

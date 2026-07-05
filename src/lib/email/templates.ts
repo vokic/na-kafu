@@ -37,7 +37,7 @@ export async function sendConfirmationEmail(invite: Invite, shareUrl: string, ma
   const friend = invite.mode === 'friend';
   const name = esc(invite.recipient_name);
   const how = friend
-    ? `Daj ovaj link <b>drugu od poverenja</b> da ga prosledi osobi <b>${name}</b>. Ti ostaješ skriven dok ne prihvati.`
+    ? `Daj ovaj link <b>drugu od poverenja</b> da ga prosledi osobi <b>${name}</b>. Ti ostaješ skriven dok ne odluči da otkrije ko si.`
     : `Podeli ovaj link sa <b>${name}</b> preko Instagrama ili poruke.`;
   const html = shell(
     'Tvoja pozivnica je spremna.',
@@ -72,7 +72,14 @@ export async function sendNotificationEmail(
   } else {
     const rows = [`<b>Razlog:</b> ${esc(response.reason)}`];
     if (response.reason_note) rows.push(`<b>Poruka:</b> "${esc(response.reason_note)}"`);
-    const hidden = invite.mode === 'friend' ? '<br><br>Ostao si skriven - niko ne zna da si ti pitao.' : '';
+    // Honest anonymity status: the recipient can reveal the sender and still decline, so
+    // "you stayed hidden" is only true when reveal never happened (mirrors ManageView).
+    const hidden =
+      invite.mode === 'friend'
+        ? invite.revealed_at
+          ? '<br><br>Otkrila je ko si pre odgovora.'
+          : '<br><br>Ostao si skriven - niko ne zna da si ti pitao.'
+        : '';
     body = `<p style="font-size:16px;line-height:1.5">Ovaj put ne.</p>
             <p style="font-size:15px;line-height:1.6">${rows.join('<br>')}${hidden}</p>`;
   }

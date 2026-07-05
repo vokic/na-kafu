@@ -214,7 +214,7 @@ export default function ManageView({ token }: { token: string }) {
           )}
           {declined && friend && (
             <div className="note" style={{ display: 'block' }}>
-              {SR.result.friendHidden}
+              {invite.revealed_at ? SR.result.friendRevealedDeclined : SR.result.friendHidden}
             </div>
           )}
 

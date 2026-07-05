@@ -3,7 +3,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { generateShortToken, generateToken } from '@/lib/data/tokens';
 import { sendConfirmationEmail, sendNotificationEmail } from '@/lib/email/templates';
-import { uploadPhotoFromDataUrl } from './storage';
+import { uploadPhotoFromDataUrl, type UploadedPhoto } from './storage';
 import { ApiError } from './http';
 import { SR } from '@/lib/i18n/sr';
 import { THEMES } from '@/lib/types';
@@ -61,7 +61,10 @@ async function logEvent(inviteId: string, type: string, meta: Record<string, unk
   await supabaseAdmin().from('events').insert({ invite_id: inviteId, type, meta });
 }
 
-export async function createInvite(payload: CreateInvitePayload, baseUrl: string): Promise<CreateInviteResult> {
+// `ip` is recorded in the events log (created / photo_uploaded meta) as abuse evidence —
+// together with the untouched original photo in the private bucket it's what we can hand
+// to authorities on a report. Purged with the invite by the retention job.
+export async function createInvite(payload: CreateInvitePayload, baseUrl: string, ip?: string): Promise<CreateInviteResult> {
   const places = Array.isArray(payload?.places) ? payload.places : [];
   if (places.length < 2 || places.length > 4) throw new ApiError('INVALID', 'Izaberi 2-4 mesta.');
   if (!places.every((p) => typeof p === 'string' && SR.places.includes(p as (typeof SR.places)[number]))) {
@@ -85,10 +88,14 @@ export async function createInvite(payload: CreateInvitePayload, baseUrl: string
   ensureMax(payload.sender_about, MAX.sender_about, 'O sebi');
   ensureMax(payload.sender_email, MAX.sender_email, 'Email');
 
-  // Upload the photo to Storage (replaces the inline base64 with a public URL).
+  // Upload the photo to Storage (replaces the inline base64 with a public URL of the
+  // cleaned copy; the original is preserved in the private evidence bucket).
   let photoUrl: string | null = payload.sender_photo_url || null;
+  let photoOriginal: UploadedPhoto['original'] | null = null;
   if (photoUrl && photoUrl.startsWith('data:')) {
-    photoUrl = await uploadPhotoFromDataUrl(photoUrl);
+    const uploaded = await uploadPhotoFromDataUrl(photoUrl);
+    photoUrl = uploaded?.url ?? null;
+    photoOriginal = uploaded?.original ?? null;
   }
 
   const sb = supabaseAdmin();
@@ -120,7 +127,8 @@ export async function createInvite(payload: CreateInvitePayload, baseUrl: string
   }
   if (!invite) throw new ApiError('CONFLICT', 'Ne mogu da napravim jedinstven token, pokušaj ponovo.');
 
-  await logEvent(invite.id, 'created');
+  await logEvent(invite.id, 'created', ip ? { ip } : null);
+  if (photoOriginal) await logEvent(invite.id, 'photo_uploaded', { ...photoOriginal, ip: ip ?? null });
 
   const shareUrl = `${baseUrl}/p/${invite.invite_token}`;
   const manageUrl = `${baseUrl}/m/${invite.manage_token}`;
@@ -282,6 +290,15 @@ export async function cancelInvite(manageToken: string): Promise<void> {
   if (invite.status === 'accepted' || invite.status === 'declined') {
     throw new ApiError('ALREADY_RESPONDED', 'Već je odgovoreno - ne može da se otkaže.');
   }
+  // Status can drift (respond() inserts the response first; its status update may fail),
+  // so also check the responses table — an answered invite must never be cancellable.
+  const { data: existing, error: respErr } = await sb
+    .from('responses')
+    .select('id')
+    .eq('invite_id', invite.id)
+    .maybeSingle();
+  if (respErr) throw new ApiError('SERVER', respErr.message);
+  if (existing) throw new ApiError('ALREADY_RESPONDED', 'Već je odgovoreno - ne može da se otkaže.');
   const { error: updErr } = await sb.from('invites').update({ status: 'cancelled' }).eq('id', invite.id);
   if (updErr) throw new ApiError('SERVER', updErr.message);
   await logEvent(invite.id, 'cancelled');

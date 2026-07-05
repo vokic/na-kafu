@@ -11,6 +11,7 @@ import ResultScreen, { type ResultRow } from '@/components/ResultScreen';
 import AppRating from '@/components/AppRating';
 import { useTheme } from '@/state/ThemeProvider';
 import { store, StoreError } from '@/lib/data';
+import { isDev } from '@/lib/devFlag';
 import { track } from '@/lib/analytics';
 import { SR } from '@/lib/i18n';
 import type { RecipientView, RevealResult } from '@/lib/types';
@@ -26,11 +27,30 @@ interface Outcome {
   rows: ResultRow[];
 }
 
-export default function RecipientFlow({ token }: { token: string }) {
+export default function RecipientFlow({
+  token,
+  initialData = null,
+  initialError = null,
+}: {
+  token: string;
+  /** SSR-resolved invite (read-only fetch) — lets the card paint without a loading flash. */
+  initialData?: RecipientView | null;
+  initialError?: 'EXPIRED' | 'NOT_FOUND' | null;
+}) {
   const router = useRouter();
   const { setTheme } = useTheme();
-  const [step, setStep] = useState<Step>('loading');
-  const [view, setView] = useState<RecipientView | null>(null);
+  const [step, setStep] = useState<Step>(() =>
+    initialData
+      ? initialData.already_responded
+        ? 'closed'
+        : 'receive'
+      : initialError === 'EXPIRED'
+        ? 'expired'
+        : initialError === 'NOT_FOUND'
+          ? 'notfound'
+          : 'loading',
+  );
+  const [view, setView] = useState<RecipientView | null>(initialData);
   const [reveal, setReveal] = useState<RevealResult | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [busy, setBusy] = useState(false);
@@ -54,14 +74,18 @@ export default function RecipientFlow({ token }: { token: string }) {
       })
       .catch((err) => {
         if (!active) return;
-        const expired = err instanceof StoreError && err.code === 'EXPIRED';
+        const code = err instanceof StoreError ? err.code : 'UNKNOWN';
+        // SSR already rendered the invite: a transient client error (network, rate limit)
+        // must not replace it with "not found" — only a definitive EXPIRED/NOT_FOUND does.
+        if (initialData && code !== 'EXPIRED' && code !== 'NOT_FOUND') return;
+        const expired = code === 'EXPIRED';
         track(expired ? 'invite_expired_viewed' : 'invite_notfound_viewed', { invite_token: token });
         setStep(expired ? 'expired' : 'notfound');
       });
     return () => {
       active = false;
     };
-  }, [token, setTheme, preview]);
+  }, [token, setTheme, preview, initialData]);
 
   // Mandatory response: warn if the recipient tries to leave before choosing yes/no.
   useEffect(() => {
@@ -200,7 +224,7 @@ export default function RecipientFlow({ token }: { token: string }) {
   })();
 
   return (
-    <PhoneShell showThemeSwitcher={false} onDevFill={() => setFillSignal((s) => s + 1)} aside={aside}>
+    <PhoneShell showThemeSwitcher={false} onDevFill={isDev ? () => setFillSignal((s) => s + 1) : undefined} aside={aside}>
       {step === 'loading' && <LoadingScreen key="loading" />}
       {step === 'notfound' && (
         <InfoScreen

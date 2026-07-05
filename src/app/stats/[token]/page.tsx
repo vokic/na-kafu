@@ -169,7 +169,8 @@ export default async function StatsPage({ params }: { params: Promise<{ token: s
       </>
     );
   } catch (e) {
-    body = <p style={C.muted}>Greška pri čitanju statistike: {e instanceof Error ? e.message : 'nepoznato'}</p>;
+    console.error('[stats] failed to load', e);
+    body = <p style={C.muted}>Greška pri čitanju statistike. Detalji su u server logu.</p>;
   }
 
   return (

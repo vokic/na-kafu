@@ -79,6 +79,18 @@ export const SR = {
     previewBack: 'Zatvori pregled',
   },
 
+  // Link-preview (OG) copy for /p/:token — what the recipient sees in the IG/WhatsApp DM
+  // before opening. Friend mode must never hint at the sender's identity.
+  og: {
+    friendTitle: 'Neko te zove na kafu?',
+    friendDesc: 'Nekome se dopadaš i želi da stupi u kontakt. Otvori i vidi.',
+    directTitle: 'Pozivnica za tebe.',
+    directDesc: 'Stigla ti je pozivnica na izlazak. Otvori i odgovori.',
+    fallbackTitle: 'na kafu?',
+    fallbackDesc: 'Pozovi nekoga, bez treme.',
+    hint: 'Otvori i odgovori - bez naloga.',
+  },
+
   reveal: {
     heading: { l1: 'Pozivnicu', l2: 'šalje…' },
     accept: 'Prihvati',
@@ -118,6 +130,7 @@ export const SR = {
     acceptTitleSuffix: 'kaže da!', // "{ime} kaže da!"
     labels: { place: 'Mesto', contact: '', reason: 'Razlog', note: 'Poruka', herMessage: 'Poruka nazad' },
     friendHidden: 'Ostao si skriven - niko ne zna da si ti pitao.',
+    friendRevealedDeclined: 'Otkrila je ko si pre odgovora.',
     friendRevealedNoContact: 'Sad zna ko si - javiće ti se, ili vas drug spoji.',
     newInvite: 'Napravi novu pozivnicu',
   },

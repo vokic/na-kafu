@@ -83,7 +83,7 @@ export default function ReceiveScreen({
             <button className="btn btn-primary btn-yes" onClick={onPrimary} disabled={busy}>
               {busy ? <span className="spinner" /> : friend ? SR.recv.reveal : SR.recv.acceptDirect}
             </button>
-            <button className="btn btn-outline" onClick={onDecline}>
+            <button className="btn btn-outline" onClick={onDecline} disabled={busy}>
               {SR.recv.decline}
             </button>
           </div>

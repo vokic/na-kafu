@@ -19,19 +19,27 @@ export function generateId(): string {
   return generateToken(32);
 }
 
-// Short, bit.ly-style public token: 6 lowercase letters, no dashes (e.g. "kqmxzp").
-// ~309M combinations — fine for the FE/demo phase. For production consider lengthening
-// (HANDOVER §7.1 suggests >=16 for unguessability).
-const SHORT_ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
-
-function pick(set: string, n: number): string {
-  const bytes = new Uint8Array(n);
-  crypto.getRandomValues(bytes);
-  let s = '';
-  for (let i = 0; i < n; i++) s += set[bytes[i] % set.length];
-  return s;
-}
+// Short, bit.ly-style public token: 8 lowercase letters with a dash after the 4th
+// (e.g. "kafu-mila" style: "vrrn-uzit"). Alphabet drops q/w/x/y so links stay easy
+// to dictate in Serbian. 22^8 ≈ 5.5e10 combinations — enumeration is impractical
+// when paired with API rate limiting and the 24h invite expiry (HANDOVER §7.1 / §10).
+// Old 6-letter tokens keep resolving (lookup is exact-match on the stored value).
+const SHORT_ALPHABET = 'abcdefghijklmnoprstuvz'; // 22 letters
+const SHORT_LEN = 8;
+// Largest multiple of 22 that fits in a byte; rejecting bytes >= this removes the
+// modulo bias a plain `byte % 22` would have.
+const UNBIASED_LIMIT = 242;
 
 export function generateShortToken(): string {
-  return pick(SHORT_ALPHABET, 6);
+  let out = '';
+  while (out.length < SHORT_LEN) {
+    const bytes = new Uint8Array(SHORT_LEN * 2);
+    crypto.getRandomValues(bytes);
+    for (const b of bytes) {
+      if (b >= UNBIASED_LIMIT) continue;
+      out += SHORT_ALPHABET[b % SHORT_ALPHABET.length];
+      if (out.length === SHORT_LEN) break;
+    }
+  }
+  return `${out.slice(0, 4)}-${out.slice(4)}`;
 }

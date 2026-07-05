@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 
 export async function POST(req: Request, ctx: { params: Promise<{ token: string }> }) {
   try {
-    rateLimit(`invites:reveal:${clientIp(req)}`, 30, 60_000);
+    await rateLimit(`invites:reveal:${clientIp(req)}`, 30, 60_000);
     const { token } = await ctx.params;
     const result = await reveal(token);
     return NextResponse.json(result);
